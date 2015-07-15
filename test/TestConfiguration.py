@@ -8,13 +8,22 @@ process.load("Configuration.EventContent.EventContent_cff")
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_38T_cff')
 
-process.GlobalTag.globaltag = "MCRUN2_74_V9"
+#process.GlobalTag.globaltag = "MCRUN2_74_V9"
+process.GlobalTag.globaltag = "74X_dataRun2_Express_v0"
 
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(20))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
 process.source = cms.Source("PoolSource")
 process.source.fileNames = cms.untracked.vstring(
-        'file:///home/fynu/sbrochet/storage/MINIAODSIM/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_Asympt25ns_MCRUN2_74_V9_reduced.root'
+#        'file:///home/fynu/sbrochet/storage/MINIAODSIM/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_Asympt25ns_MCRUN2_74_V9_reduced.root'
+'/store/data/Run2015B/DoubleMuon/MINIAOD/PromptReco-v1/000/251/244/00000/E42FEF61-6E27-E511-B93A-02163E0143C0.root',
+'/store/data/Run2015B/DoubleMuon/MINIAOD/PromptReco-v1/000/251/251/00000/0292F6F9-8A27-E511-9074-02163E012213.root',
+'/store/data/Run2015B/DoubleMuon/MINIAOD/PromptReco-v1/000/251/252/00000/9ADEE140-9C27-E511-919A-02163E011D23.root',
         )
+##### #####
+# Support for json files for data
+##### #####
+import FWCore.PythonUtilities.LumiList as LumiList
+process.source.lumisToProcess = LumiList.LumiList(filename = 'Cert_246908-251252_13TeV_PromptReco_Collisions15_JSON.txt').getVLuminosityBlockRange()
 ##### #####
 # Electron ID recipe
 ##### #####
@@ -35,7 +44,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 100
 
 # Producers
 from cp3_llbb.Framework import EventProducer
-from cp3_llbb.Framework import GenParticlesProducer
+#from cp3_llbb.Framework import GenParticlesProducer
 from cp3_llbb.Framework import HLTProducer
 from cp3_llbb.Framework import JetsProducer
 from cp3_llbb.Framework import METProducer
@@ -52,7 +61,7 @@ process.framework = cms.EDProducer("ExTreeMaker",
 
             hlt = HLTProducer.default_configuration,
 
-            gen_particles = GenParticlesProducer.default_configuration,
+#            gen_particles = GenParticlesProducer.default_configuration,
 
             jets = JetsProducer.default_configuration.clone(
                 parameters = cms.PSet(
