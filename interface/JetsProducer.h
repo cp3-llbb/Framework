@@ -35,6 +35,8 @@ class JetsProducer: public CandidatesProducer<pat::Jet>, public BTaggingScaleFac
         std::vector<float>& jecFactor = tree["jecFactor"].write<std::vector<float>>();
         std::vector<float>& puJetID = tree["puJetID"].write<std::vector<float>>();
         std::vector<float>& vtxMass = tree["vtxMass"].write<std::vector<float>>();
+
+        std::map<std::string, std::vector<float>> bTagDiscriminators;
 };
 
 #endif
