@@ -3,6 +3,8 @@
 #include <cp3_llbb/Framework/interface/GenParticlesProducer.h>
 #include <cp3_llbb/Framework/interface/JetsProducer.h>
 
+#include <boost/any.hpp>
+
 #include <iostream>
 
 void TestAnalyzer::analyze(const edm::Event&, const edm::EventSetup&, const ProducersManager& producers) {
@@ -11,6 +13,8 @@ void TestAnalyzer::analyze(const edm::Event&, const edm::EventSetup&, const Prod
 
     for(size_t i = 0; i < jets.p4.size(); i++) {
       std::cout << "Jet " << i << " Pt = " << jets.p4[i].Pt() << ", CSVv2 = " << jets.bTagDiscriminators.at("pfCombinedInclusiveSecondaryVertexV2BJetTags")[i] << std::endl;
+      std::cout << "Jet " << i << " Pt = " << jets.p4[i].Pt() << ", area = " << jets.get<std::vector<float>>("area")[i] << std::endl;
+      std::cout << "Jet " << i << " Pt = " << jets.p4[i].Pt() << ", area = " << boost::any_cast<float>(jets[i]["area"]) << std::endl;
     }
 
 /*

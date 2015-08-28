@@ -13,7 +13,7 @@ void JetsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup)
         fill_candidate(jet, jet.genJet());
 
         jecFactor.push_back(jet.jecFactor(0));
-        area.push_back(jet.jetArea());
+        push_back("area", jet.jetArea());
         partonFlavor.push_back(jet.partonFlavour());
         hadronFlavor.push_back(jet.hadronFlavour());
 

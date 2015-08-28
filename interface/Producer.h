@@ -15,6 +15,8 @@
 
 #include <Math/Vector4D.h>
 
+#include <boost/any.hpp>
+
 #include <vector>
 #include <map>
 
@@ -24,7 +26,7 @@ namespace Framework {
 
     class Producer {
         public:
-            Producer(const std::string& name, const ROOT::TreeGroup& tree_, const edm::ParameterSet& config):
+            Producer(const std::string& name, ROOT::TreeGroup& tree_, const edm::ParameterSet& config):
                 m_name(name),
                 tree(tree_) {
                 }
@@ -41,9 +43,22 @@ namespace Framework {
             virtual void beginLuminosityBlock(const edm::LuminosityBlock&, const edm::EventSetup&) {}
             virtual void endLuminosityBlock(const edm::LuminosityBlock&, const edm::EventSetup&) {}
 
+            template<typename T> const T& get(int i) const { return boost::any_cast<const T&>(tree[variable]); }
+            
+            template<typename T> void push_back(std::string variable, T value){ 
+                std::vector<T> &var = boost::any_cast<std::vector<T>&>(tree[variable]);
+                var.push_back(value);
+                _data.push_back(std::make_pair(variable, value));
+            }
+
+            const boost::any& operator[](const int index) const { return data[index]; }
+            
         protected:
             std::string m_name;
             ROOT::TreeGroup tree;
+            
+            std::map<std::string, boost::any&> treeData;
+            std::vector<std::map<std::string, boost::any>> data;
     };
 
 }

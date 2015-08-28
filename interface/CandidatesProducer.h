@@ -8,7 +8,7 @@
 template<typename ObjectType>
 class CandidatesProducer: public Framework::Producer {
     public:
-        CandidatesProducer(const std::string& name, const ROOT::TreeGroup& tree, const edm::ParameterSet& config):
+        CandidatesProducer(const std::string& name, ROOT::TreeGroup& tree, const edm::ParameterSet& config):
             Producer(name, tree, config),
             m_cut(config.getUntrackedParameter<std::string>("cut", "1"))
         {
