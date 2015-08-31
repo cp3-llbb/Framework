@@ -28,6 +28,9 @@ void JetsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup)
             std::vector<float>& branch = tree[btag_discri.first].write<std::vector<float>>();
             branch.push_back(btag_discri.second);
 
+            // store the discriminator values into the producer, for easy access by the analyzer
+            bTagDiscriminators[btag_discri.first].push_back(btag_discri.second);
+
             Algorithm algo = string_to_algorithm(btag_discri.first);
 
             if (algo != Algorithm::UNKNOWN && BTaggingScaleFactors::has_scale_factors(algo)) {
