@@ -7,7 +7,9 @@ Common framework for all cp3-llbb analyses
 * The current state of the art mini-AOD documentation can be found [here](https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookMiniAOD2015)
 * You will probably want to install as well [GridIn](https://github.com/cp3-llbb/GridIn) to run jobs on the grid, and one of the existing analyses ([TTAnalysis](https://github.com/cp3-llbb/TTAnalysis), [HHAnalysis](https://github.com/cp3-llbb/HHAnalysis), [ZAAnalysis](https://github.com/cp3-llbb/ZAAnalysis))
 
+## CMSSW release
 
+**CMSSW 7.4.12**
 
 ## First time setup instructions
 
@@ -15,24 +17,12 @@ Common framework for all cp3-llbb analyses
 source /nfs/soft/grid/ui_sl6/setup/grid-env.sh
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 export SCRAM_ARCH=slc6_amd64_gcc491
-cmsrel CMSSW_7_4_10
-cd CMSSW_7_4_10/src
+cmsrel CMSSW_7_4_12
+cd CMSSW_7_4_12/src
 cmsenv
 
 git cms-init
 cd ${CMSSW_BASE}/src 
-
-# Electron ID as from [EGamma twiki (as on September 1st 2015)](https://twiki.cern.ch/twiki/bin/view/CMS/MultivariateElectronIdentificationRun2)
-git cms-merge-topic ikrav:egm_id_747_v2
-
-# Jet tool box
-git clone https://github.com/cms-jet/JetToolbox JMEAnalysis/JetToolbox
-
-# Backport of new pileup jet id. Not needed for CMSSW 7.4.12+
-git cms-merge-topic 11007
-
-# MET stuff
-git cms-merge-topic -u cms-met:METCorUnc74X
 
 # CP3-llbb framework itself
 git clone -o upstream git@github.com:blinkseb/TreeWrapper.git cp3_llbb/TreeWrapper
