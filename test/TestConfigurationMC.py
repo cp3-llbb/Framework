@@ -69,7 +69,7 @@ process = Framework.create(False, eras.Run2_25ns, '74X_mcRun2_asymptotic_v2', cm
 Framework.schedule(process, ['dilepton', 'bTagsLoose', 'bTagsMedium', 'bTagsTight', 'test'])
 
 process.source.fileNames = cms.untracked.vstring(
-        'file:///home/fynu/sbrochet/storage/MINIAODSIM/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_Asympt25ns_MCRUN2_74_V9_reduced.root'
+        '/store/mc/RunIISpring15MiniAODv2/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/74X_mcRun2_asymptotic_v2-v1/00000/0014DC94-DC5C-E511-82FB-7845C4FC39F5.root'
         )
 
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(1000))
