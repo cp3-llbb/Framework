@@ -179,8 +179,10 @@ void ExTreeMaker::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
     if (! should_continue)
         return;
 
-    for (auto& producer: m_producers)
+    for (auto& producer: m_producers) {
         producer.second->produce(iEvent, iSetup);
+        producer.second->setRun(true);
+    }
 
     should_continue = m_categories->evaluate_pre_analyzers(*m_producers_manager);
     if (! should_continue) {
@@ -189,8 +191,10 @@ void ExTreeMaker::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
         return;
     }
 
-    for (auto& analyzer: m_analyzers)
+    for (auto& analyzer: m_analyzers) {
         analyzer->analyze(iEvent, iSetup, *m_producers_manager, *m_categories);
+        analyzer->setRun(true);
+    }
 
     if (m_categories->evaluate_post_analyzers(*m_producers_manager, *m_analyzers_manager))
         m_wrapper->fill();
@@ -198,6 +202,12 @@ void ExTreeMaker::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
         m_wrapper->reset();
 
     m_categories->reset();
+
+    for (auto& analyzer: m_analyzers)
+        analyzer->setRun(false);
+
+    for (auto& producer: m_producers)
+        producer.second->setRun(false);
 }
 
 
@@ -289,7 +299,14 @@ const Framework::Producer& ExTreeMaker::getProducer(const std::string& name) con
         throw edm::Exception(edm::errors::NotFound, details.str());
     }
 
-    return *producer->second;
+    Framework::Producer& p = *producer->second;
+    if (! p.hasRun()) {
+        std::stringstream details;
+        details << "Producer '" << name << "' has not been run yet for this event. Please check the scheduling of your producers";
+        throw edm::Exception(edm::errors::NotFound, details.str());
+    }
+
+    return p;
 }
 
 bool ExTreeMaker::producerExists(const std::string& name) const {
@@ -305,7 +322,14 @@ const Framework::Analyzer& ExTreeMaker::getAnalyzer(const std::string& name) con
         throw edm::Exception(edm::errors::NotFound, details.str());
     }
 
-    return *m_analyzers[std::distance(m_analyzers_name.begin(), it)];
+    Framework::Analyzer& analyzer = *m_analyzers[std::distance(m_analyzers_name.begin(), it)];
+    if (! analyzer.hasRun()) {
+        std::stringstream details;
+        details << "Analyzer '" << name << "' has not been run yet for this event. Please check the scheduling of your analyzers";
+        throw edm::Exception(edm::errors::NotFound, details.str());
+    }
+
+    return analyzer;
 }
 
 bool ExTreeMaker::analyzerExists(const std::string& name) const {

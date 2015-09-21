@@ -20,11 +20,15 @@
 #include <map>
 
 class CategoryManager;
+class ExTreeMaker;
 
 namespace Framework {
 
     class Analyzer {
+        friend class ::ExTreeMaker;
+
         public:
+
             Analyzer(const std::string& name, const ROOT::TreeGroup& tree_, const edm::ParameterSet& config):
                 m_name(name),
                 tree(tree_) {
@@ -47,6 +51,17 @@ namespace Framework {
         protected:
             std::string m_name;
             ROOT::TreeGroup tree;
+
+        private:
+            bool hasRun() const {
+                return m_run;
+            }
+
+            void setRun(bool run) {
+                m_run = run;
+            }
+
+            bool m_run; //< A flag indicating if the analyzer has already been run for this event
     };
 
 }
