@@ -14,7 +14,7 @@ class BTagsAnalyzer: public Framework::Analyzer {
             m_discr_name(config.getUntrackedParameter<std::string>("discr_name")) 
             { }
 
-        virtual void analyze(const edm::Event&, const edm::EventSetup&, const ProducersManager&, const CategoryManager&) override;
+        virtual void analyze(const edm::Event&, const edm::EventSetup&, const ProducersManager&, const AnalyzersManager&, const CategoryManager&) override;
 
         BRANCH(indices, std::vector<uint8_t>);
 

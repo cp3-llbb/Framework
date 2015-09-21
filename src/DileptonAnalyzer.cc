@@ -41,7 +41,7 @@ void DileptonAnalyzer::registerCategories(CategoryManager& manager, const edm::P
     }
 }
 
-void DileptonAnalyzer::analyze(const edm::Event& event, const edm::EventSetup&, const ProducersManager& producers, const CategoryManager& categories) {
+void DileptonAnalyzer::analyze(const edm::Event& event, const edm::EventSetup&, const ProducersManager& producers, const AnalyzersManager& analyzers, const CategoryManager& categories) {
 
 // ***** ***** *****
 // Get all dilepton objects out of the event

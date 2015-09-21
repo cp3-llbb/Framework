@@ -3,10 +3,14 @@
 #include <cp3_llbb/Framework/interface/GenParticlesProducer.h>
 #include <cp3_llbb/Framework/interface/JetsProducer.h>
 
+#include <cp3_llbb/Framework/interface/DileptonAnalyzer.h>
 
-void TestAnalyzer::analyze(const edm::Event&, const edm::EventSetup&, const ProducersManager& producers, const CategoryManager& categories) {
+
+void TestAnalyzer::analyze(const edm::Event&, const edm::EventSetup&, const ProducersManager& producers, const AnalyzersManager& analyzers, const CategoryManager& categories) {
 
     const JetsProducer& jets = producers.get<JetsProducer>("jets");
+
+    const DileptonAnalyzer& di = analyzers.get<DileptonAnalyzer>("dilepton");
 
 /*
     if (producers.exists("gen_particles")) {

@@ -20,6 +20,7 @@
 #include <map>
 
 class CategoryManager;
+class AnalyzersManager;
 class ExTreeMaker;
 
 namespace Framework {
@@ -34,7 +35,7 @@ namespace Framework {
                 tree(tree_) {
                 }
 
-            virtual void analyze(const edm::Event&, const edm::EventSetup&, const ProducersManager&, const CategoryManager&) = 0;
+            virtual void analyze(const edm::Event&, const edm::EventSetup&, const ProducersManager&, const AnalyzersManager&, const CategoryManager&) = 0;
             virtual void doConsumes(const edm::ParameterSet&, edm::ConsumesCollector&& collector) {}
 
             virtual void registerCategories(CategoryManager& manager, const edm::ParameterSet& config) {}

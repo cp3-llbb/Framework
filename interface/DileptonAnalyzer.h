@@ -22,7 +22,7 @@ class DileptonAnalyzer: public Framework::Analyzer {
                 m_electron_tight_wp_name = config.getUntrackedParameter<std::string>("electrons_tight_wp_name", "cutBasedElectronID-Spring15-50ns-V1-standalone-tight");
         }
 
-        virtual void analyze(const edm::Event&, const edm::EventSetup&, const ProducersManager&, const CategoryManager&) override;
+        virtual void analyze(const edm::Event&, const edm::EventSetup&, const ProducersManager&, const AnalyzersManager&, const CategoryManager&) override;
 
         virtual void registerCategories(CategoryManager& manager, const edm::ParameterSet&) override;
 

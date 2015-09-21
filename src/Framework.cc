@@ -192,7 +192,7 @@ void ExTreeMaker::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
     }
 
     for (auto& analyzer: m_analyzers) {
-        analyzer->analyze(iEvent, iSetup, *m_producers_manager, *m_categories);
+        analyzer->analyze(iEvent, iSetup, *m_producers_manager, *m_analyzers_manager, *m_categories);
         analyzer->setRun(true);
     }
 

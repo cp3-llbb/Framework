@@ -2,7 +2,7 @@
 
 #include <cp3_llbb/Framework/interface/JetsProducer.h>
 
-void BTagsAnalyzer::analyze(const edm::Event& event, const edm::EventSetup&, const ProducersManager& producers, const CategoryManager& categories) {
+void BTagsAnalyzer::analyze(const edm::Event& event, const edm::EventSetup&, const ProducersManager& producers, const AnalyzersManager& analyzers, const CategoryManager& categories) {
     
     const JetsProducer& jets = producers.get<JetsProducer>("jets");
 
