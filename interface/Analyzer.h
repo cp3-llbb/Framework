@@ -20,17 +20,22 @@
 #include <map>
 
 class CategoryManager;
+class AnalyzersManager;
+class ExTreeMaker;
 
 namespace Framework {
 
     class Analyzer {
+        friend class ::ExTreeMaker;
+
         public:
+
             Analyzer(const std::string& name, const ROOT::TreeGroup& tree_, const edm::ParameterSet& config):
                 m_name(name),
                 tree(tree_) {
                 }
 
-            virtual void analyze(const edm::Event&, const edm::EventSetup&, const ProducersManager&, const CategoryManager&) = 0;
+            virtual void analyze(const edm::Event&, const edm::EventSetup&, const ProducersManager&, const AnalyzersManager&, const CategoryManager&) = 0;
             virtual void doConsumes(const edm::ParameterSet&, edm::ConsumesCollector&& collector) {}
 
             virtual void registerCategories(CategoryManager& manager, const edm::ParameterSet& config) {}
@@ -47,6 +52,17 @@ namespace Framework {
         protected:
             std::string m_name;
             ROOT::TreeGroup tree;
+
+        private:
+            bool hasRun() const {
+                return m_run;
+            }
+
+            void setRun(bool run) {
+                m_run = run;
+            }
+
+            bool m_run; //< A flag indicating if the analyzer has already been run for this event
     };
 
 }
