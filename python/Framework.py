@@ -1,34 +1,10 @@
 import FWCore.ParameterSet.Config as cms
 from Configuration.StandardSequences.Eras import eras
 
-def change_input_tag_process_(input_tag, process_name_from, process_name_to):
-    if not isinstance(input_tag, cms.InputTag):
-        input_tag = cms.untracked.InputTag(input_tag)
+from cp3_llbb.Framework.Tools import change_process_name
+from cp3_llbb.Framework.Systematics import runSystematics
 
-    if len(input_tag.getProcessName()) > 0 and input_tag.getProcessName() == process_name_from:
-        old_input_tag = input_tag.value()
-        input_tag.setProcessName(process_name_to)
-        print("Changing input tag from %r to %r" % (old_input_tag, input_tag.value()))
-
-    return input_tag
-
-def change_process_name_(module, process_name_from, process_name_to):
-    if isinstance(module, cms._Parameterizable):
-        for name in module.parameters_().keys():
-            value = getattr(module, name)
-            type = value.pythonTypeName()
-
-            if 'VInputTag' in type:
-                for (i, tag) in enumerate(value):
-                    value[i] = change_input_tag_process_(tag, process_name_from, process_name_to)
-            elif 'InputTag' in type:
-                change_input_tag_process_(value, process_name_from, process_name_to)
-
-            if isinstance(value, cms._Parameterizable):
-                change_process_name_(value, process_name_from, process_name_to)
-
-
-def create(isData, era, globalTag=None, analyzers=cms.PSet(), redoJEC=False, JECDatabase=None, process_name=None):
+def create(isData, era, globalTag=None, analyzers=cms.PSet(), redoJEC=False, JECDatabase=None, process_name=None, doSystematics=[]):
     """Create the CMSSW python configuration for the Framework
 
     Args:
@@ -39,6 +15,7 @@ def create(isData, era, globalTag=None, analyzers=cms.PSet(), redoJEC=False, JEC
         redoJEC (bool): If True, a new jet collection will be created, starting from MiniAOD jets but with latest JEC, pulled from the global tag.
         JECDatabase (str): If not `None`, then JECs will be read from this database.
         process_name (str): The process name used for the MiniAOD step. Default to 'PAT'.
+        doSystematics (list): If not None or empty, do specified systematics variation. See `Systematics.py` for a list of supported systematics
 
     Returns:
         The ``process`` object for the CMSSW framework
@@ -131,7 +108,7 @@ def create(isData, era, globalTag=None, analyzers=cms.PSet(), redoJEC=False, JEC
     process = cms.Process("ETM", era)
 
     process.options = cms.untracked.PSet(
-            wantSummary = cms.untracked.bool(False),
+            wantSummary = cms.untracked.bool(True),
             allowUnscheduled = cms.untracked.bool(True)
             )
 
@@ -280,7 +257,26 @@ def create(isData, era, globalTag=None, analyzers=cms.PSet(), redoJEC=False, JEC
     if miniaod_process_name:
         print("")
         print("Changing process name from %r to %r..." % ('PAT', miniaod_process_name))
-        change_process_name_(process.framework, 'PAT', miniaod_process_name)
+        change_process_name(process.framework, 'PAT', miniaod_process_name)
+
+    if doSystematics and len(doSystematics) > 0:
+        systematics_options = {
+                'jec': {'jetCollection': 'slimmedJets',
+                         'metCollection': 'slimmedMETs',
+                         'uncertaintiesFile': 'cp3_llbb/Framework/data/Systematics/Summer15_25nsV6_MC_UncertaintySources_AK4PFchs.txt'},
+                'jer': {'jetCollection': 'slimmedJets',
+                        'metCollection': 'slimmedMETs',
+                        'genJetCollection': 'slimmedGenJets',
+                        'resolutionFile': 'cp3_llbb/Framework/data/Systematics/Summer15_25nsV6_MC_PtResolution_AK4PFchs.txt',
+                        'scaleFactorFile': 'cp3_llbb/Framework/data/Systematics/Summer15_25nsV6_DATAMCSF_AK4PFchs.txt'}
+                }
+
+        systematics = {}
+        for syst in doSystematics:
+            systematics[syst] = systematics_options[syst]
+
+        print("")
+        runSystematics(process, systematics)
 
 
     #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

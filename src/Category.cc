@@ -57,3 +57,6 @@ void CategoryManager::print_summary() {
         printf("%-60s %20" PRIu64 "\n", category.second.name.c_str(), category.second.events);
 }
 
+void CategoryManager::set_prefix(const std::string& prefix) {
+    m_current_prefix = prefix;
+}

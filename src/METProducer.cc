@@ -11,7 +11,9 @@ void METProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup) 
 
     sumEt = met.sumEt();
 
-    uncorrectedPt = met.uncorPt();
-    uncorrectedPhi = met.uncorPhi();
-    uncorrectedSumEt = met.uncorSumEt();
+    if (m_slimmed) {
+        uncorrectedPt = met.uncorPt();
+        uncorrectedPhi = met.uncorPhi();
+        uncorrectedSumEt = met.uncorSumEt();
+    }
 }

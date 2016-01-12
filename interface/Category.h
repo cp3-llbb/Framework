@@ -91,18 +91,20 @@ class CategoryManager {
     public:
         template<class T>
         void new_category(const std::string& name, const std::string& description, const edm::ParameterSet& config) {
-            if (m_categories.count(name) > 0) {
-                throw edm::Exception(edm::errors::InsertFailure, "A category named '" + name + "' already exists.");
+            std::string internal_name = m_current_prefix + name;
+            if (m_categories.count(internal_name) > 0) {
+                throw edm::Exception(edm::errors::InsertFailure, "A category named '" + name + "' already exists for this analyzer.");
             }
 
             std::unique_ptr<Category> category(new T());
             category->configure(config);
-            m_categories.emplace(name, CategoryData(name, description, std::move(category), m_tree));
+            m_categories.emplace(internal_name, CategoryData(internal_name, description, std::move(category), m_tree));
         }
 
         bool in_category(const std::string& name) const {
 
-            const auto& category = m_categories.find(name);
+            std::string internal_name = m_current_prefix + name;
+            const auto& category = m_categories.find(internal_name);
             if (category == m_categories.end()) {
                 std::stringstream details;
                 details << "Category '" << name << "' not found.";
@@ -114,7 +116,8 @@ class CategoryManager {
 
         const CategoryWrapper get(const std::string& name) const {
 
-            const auto& category = m_categories.find(name);
+            std::string internal_name = m_current_prefix + name;
+            const auto& category = m_categories.find(internal_name);
             if (category == m_categories.end()) {
                 std::stringstream details;
                 details << "Category '" << name << "' not found.";
@@ -131,6 +134,8 @@ class CategoryManager {
             // Empty
         }
 
+        void set_prefix(const std::string& prefix);
+
         bool evaluate_pre_analyzers(const ProducersManager& producers);
         bool evaluate_post_analyzers(const ProducersManager& producers, const AnalyzersManager& analyzers);
 
@@ -138,12 +143,13 @@ class CategoryManager {
 
         void print_summary();
 
-
         std::unordered_map<std::string, CategoryData> m_categories;
         ROOT::TreeWrapper& m_tree;
 
         uint64_t processed_events = 0;
         uint64_t selected_events = 0;
+
+        std::string m_current_prefix;
 };
 
 #endif
