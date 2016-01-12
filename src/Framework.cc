@@ -152,12 +152,14 @@ ExTreeMaker::ExTreeMaker(const edm::ParameterSet& iConfig):
                 analyzerCategoriesParameters = analyzerData.getParameterSet("categories_parameters");
             }
 
+            m_categories->set_prefix(tree_prefix);
             analyzer->registerCategories(*m_categories, analyzerCategoriesParameters);
+            m_categories->set_prefix("");
 
 
             std::cout << " -> Adding analyzer '" << analyzerName << "'" << std::endl;
 
-            m_analyzers.push_back(analyzer);
+            m_analyzers.push_back({analyzer, analyzerName, tree_prefix});
             m_analyzers_name.push_back(analyzerName);
         }
 
@@ -192,9 +194,11 @@ void ExTreeMaker::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
     }
 
     for (auto& analyzer: m_analyzers) {
-        analyzer->analyze(iEvent, iSetup, *m_producers_manager, *m_analyzers_manager, *m_categories);
-        analyzer->setRun(true);
+        m_categories->set_prefix(analyzer.prefix);
+        analyzer.analyzer->analyze(iEvent, iSetup, *m_producers_manager, *m_analyzers_manager, *m_categories);
+        analyzer.analyzer->setRun(true);
     }
+    m_categories->set_prefix("");
 
     if (m_categories->evaluate_post_analyzers(*m_producers_manager, *m_analyzers_manager))
         m_wrapper->fill();
@@ -204,7 +208,7 @@ void ExTreeMaker::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) {
     m_categories->reset();
 
     for (auto& analyzer: m_analyzers)
-        analyzer->setRun(false);
+        analyzer.analyzer->setRun(false);
 
     for (auto& producer: m_producers)
         producer.second->setRun(false);
@@ -222,7 +226,7 @@ void ExTreeMaker::beginJob() {
         producer.second->beginJob(*m_metadata);
 
     for (auto& analyzer: m_analyzers)
-        analyzer->beginJob(*m_metadata);
+        analyzer.analyzer->beginJob(*m_metadata);
 }
 
 // ------------ method called once each job just after ending the event loop  ------------
@@ -235,7 +239,7 @@ void ExTreeMaker::endJob() {
         producer.second->endJob(*m_metadata);
 
     for (auto& analyzer: m_analyzers)
-        analyzer->endJob(*m_metadata);
+        analyzer.analyzer->endJob(*m_metadata);
 
     auto end_time = clock::now();
 
@@ -253,7 +257,7 @@ void ExTreeMaker::beginRun(const edm::Run& run, const edm::EventSetup& eventSetu
         producer.second->beginRun(run, eventSetup);
 
     for (auto& analyzer: m_analyzers)
-        analyzer->beginRun(run, eventSetup);
+        analyzer.analyzer->beginRun(run, eventSetup);
 
 }
 
@@ -265,7 +269,7 @@ void ExTreeMaker::endRun(const edm::Run& run, const edm::EventSetup& eventSetup)
         producer.second->endRun(run, eventSetup);
 
     for (auto& analyzer: m_analyzers)
-        analyzer->endRun(run, eventSetup);
+        analyzer.analyzer->endRun(run, eventSetup);
 }
 
 void ExTreeMaker::beginLuminosityBlock(const edm::LuminosityBlock& lumi, const edm::EventSetup& eventSetup) {
@@ -276,7 +280,7 @@ void ExTreeMaker::beginLuminosityBlock(const edm::LuminosityBlock& lumi, const e
         producer.second->beginLuminosityBlock(lumi, eventSetup);
 
     for (auto& analyzer: m_analyzers)
-        analyzer->beginLuminosityBlock(lumi, eventSetup);
+        analyzer.analyzer->beginLuminosityBlock(lumi, eventSetup);
 
 }
 
@@ -288,7 +292,7 @@ void ExTreeMaker::endLuminosityBlock(const edm::LuminosityBlock& lumi, const edm
         producer.second->endLuminosityBlock(lumi, eventSetup);
 
     for (auto& analyzer: m_analyzers)
-        analyzer->endLuminosityBlock(lumi, eventSetup);
+        analyzer.analyzer->endLuminosityBlock(lumi, eventSetup);
 }
 
 const Framework::Producer& ExTreeMaker::getProducer(const std::string& name) const {
@@ -322,7 +326,7 @@ const Framework::Analyzer& ExTreeMaker::getAnalyzer(const std::string& name) con
         throw edm::Exception(edm::errors::NotFound, details.str());
     }
 
-    Framework::Analyzer& analyzer = *m_analyzers[std::distance(m_analyzers_name.begin(), it)];
+    Framework::Analyzer& analyzer = *m_analyzers[std::distance(m_analyzers_name.begin(), it)].analyzer;
     if (! analyzer.hasRun()) {
         std::stringstream details;
         details << "Analyzer '" << name << "' has not been run yet for this event. Please check the scheduling of your analyzers";

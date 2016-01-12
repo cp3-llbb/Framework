@@ -8,7 +8,8 @@
 class METProducer: public Framework::Producer {
     public:
         METProducer(const std::string& name, const ROOT::TreeGroup& tree, const edm::ParameterSet& config):
-            Producer(name, tree, config)
+            Producer(name, tree, config),
+            m_slimmed(config.getUntrackedParameter<bool>("slimmed", true))
         {
 
         }
@@ -22,6 +23,12 @@ class METProducer: public Framework::Producer {
         virtual void produce(edm::Event& event, const edm::EventSetup& eventSetup) override;
 
     private:
+        float& create_branch(const std::string& name) {
+            static float s_dummy = 0;
+            return (m_slimmed) ? tree[name].write<float>() : s_dummy;
+        }
+
+        bool m_slimmed;
 
         // Tokens
         edm::EDGetTokenT<std::vector<pat::MET>> m_met_token;
@@ -31,9 +38,9 @@ class METProducer: public Framework::Producer {
         LorentzVector& p4 = tree["p4"].write<LorentzVector>();
         float& sumEt = tree["sumEt"].write<float>();
 
-        float& uncorrectedPt = tree["uncorrectedPt"].write<float>();
-        float& uncorrectedPhi = tree["uncorrectedPhi"].write<float>();
-        float& uncorrectedSumEt = tree["uncorrectedSumEt"].write<float>();
+        float& uncorrectedPt = create_branch("uncorrectedPt");
+        float& uncorrectedPhi = create_branch("uncorrectedPhi");
+        float& uncorrectedSumEt = create_branch("uncorrectedSumEt");
 };
 
 #endif

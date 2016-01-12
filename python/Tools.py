@@ -1,6 +1,89 @@
 import FWCore.ParameterSet.Config as cms
 from Configuration.StandardSequences.Eras import eras
 
+def change_input_tag_process_(input_tag, process_name_from, process_name_to):
+    if not isinstance(input_tag, cms.InputTag):
+        input_tag = cms.untracked.InputTag(input_tag)
+
+    if len(input_tag.getProcessName()) > 0 and input_tag.getProcessName() == process_name_from:
+        old_input_tag = input_tag.value()
+        input_tag.setProcessName(process_name_to)
+        print("Changing input tag from %r to %r" % (old_input_tag, input_tag.value()))
+
+    return input_tag
+
+def change_input_tag_(input_tag, from_, to_, parameter_name, padding=''):
+    if input_tag.getModuleLabel() == from_:
+        old_input_tag = input_tag.value()
+        input_tag.setModuleLabel(to_)
+        print("%sChanging value of parameter %s (input tag) from %r to %r" % (padding, parameter_name, old_input_tag, input_tag.value()))
+
+    return input_tag
+
+def change_string_(string_, from_, to_, parameter_name, padding=''):
+    if string_.value() == from_:
+        old_string = string_.value()
+        string_.setValue(to_)
+        print("%sChanging value of parameter %s (string) from %r to %r" % (padding, parameter_name, old_string, to_))
+
+    return string_
+
+def change_process_name(module, process_name_from, process_name_to):
+    if isinstance(module, cms._Parameterizable):
+        for name in module.parameters_().keys():
+            value = getattr(module, name)
+            type = value.pythonTypeName()
+
+            if 'VInputTag' in type:
+                for (i, tag) in enumerate(value):
+                    value[i] = change_input_tag_process_(tag, process_name_from, process_name_to)
+            elif 'InputTag' in type:
+                change_input_tag_process_(value, process_name_from, process_name_to)
+
+            if isinstance(value, cms._Parameterizable):
+                change_process_name(value, process_name_from, process_name_to)
+
+def change_input_tags_and_strings(module, from_, to_, parameter_name, padding=''):
+    if isinstance(module, cms._Parameterizable):
+        for name in module.parameters_().keys():
+            value = getattr(module, name)
+            type = value.pythonTypeName()
+            local_parameter_name = parameter_name + '.' + name
+
+            if 'VInputTag' in type:
+                for (i, tag) in enumerate(value):
+                    value[i] = change_input_tag_(tag, from_, to_, local_parameter_name, padding)
+            elif 'InputTag' in type:
+                change_input_tag_(value, from_, to_, local_parameter_name, padding)
+            elif 'string' in type:
+                value = change_string_(value, from_, to_, local_parameter_name, padding)
+
+            if isinstance(value, cms._Parameterizable):
+                change_input_tags_and_strings(value, from_, to_, local_parameter_name, padding)
+
+def module_has_string(module, string):
+    if isinstance(module, cms._Parameterizable):
+        for name in module.parameters_().keys():
+            value = getattr(module, name)
+            type = value.pythonTypeName()
+
+            if 'VInputTag' in type:
+                for (i, tag) in enumerate(value):
+                    if string in tag.value():
+                        return True
+            elif 'InputTag' in type:
+                if string in value.value():
+                    return True
+            elif 'string' in type:
+                if string == value.value():
+                    return True
+
+            if isinstance(value, cms._Parameterizable) and module_has_string(value, string):
+                return True
+
+
+    return False
+
 def configure_slimmedmet_(met):
     del met.t01Variation
     del met.t1Uncertainties

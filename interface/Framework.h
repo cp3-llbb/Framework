@@ -22,6 +22,12 @@ class ExTreeMaker: public edm::EDProducer, ProducerGetter, AnalyzerGetter {
     friend class ProducersManager;
     friend class AnalyzersManager;
 
+    struct AnalyzerWrapper {
+        std::shared_ptr<Framework::Analyzer> analyzer;
+        std::string name;
+        std::string prefix;
+    };
+
     public:
         explicit ExTreeMaker(const edm::ParameterSet&);
         ~ExTreeMaker();
@@ -55,7 +61,7 @@ class ExTreeMaker: public edm::EDProducer, ProducerGetter, AnalyzerGetter {
 
         // Order is important, we can't use a map here
         std::vector<std::pair<std::string, std::shared_ptr<Framework::Producer>>> m_producers;
-        std::vector<std::shared_ptr<Framework::Analyzer>> m_analyzers;
+        std::vector<AnalyzerWrapper> m_analyzers;
         std::vector<std::string> m_analyzers_name;
 
         // Categories
