@@ -41,6 +41,9 @@ class MuonsProducer: public LeptonsProducer<pat::Muon>, public ScaleFactors {
 
         BRANCH(dxy, std::vector<float>);
         BRANCH(dz, std::vector<float>);
+        BRANCH(RochCorr_pt,std::vector<float>);
+	BRANCH(RochCorr_eta,std::vector<float>);
+	BRANCH(RochCorr_phi,std::vector<float>);
 };
 
 #endif
