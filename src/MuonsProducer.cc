@@ -1,8 +1,9 @@
 #include <DataFormats/PatCandidates/interface/PackedCandidate.h>
-
+#include "DataFormats/Math/interface/Vector3D.h"
 #include <cp3_llbb/Framework/interface/MuonsProducer.h>
 #include <cp3_llbb/Framework/interface/rochcor2015.h>
 #include "TLorentzVector.h"
+#include "TMath.h"
 void MuonsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup) {
 
     edm::Handle<std::vector<pat::Muon>> muons;
@@ -19,10 +20,23 @@ void MuonsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup
     double rho = *rho_handle;
     rochcor2015 *rmcor = new rochcor2015();
     for (const auto& muon: *muons) {
-        if (! pass_cut(muon))
+	float qter = 1.0;
+        pat::Muon muoncorr=muon;
+        TLorentzVector TLmu;
+        TLmu.SetPtEtaPhiM(muon.pt(),muon.eta(),muon.phi(),0.1);
+        if(event.isRealData()){
+                rmcor->momcor_data(TLmu, muon.charge(), 0, qter);
+        }
+        else{
+                rmcor->momcor_mc(TLmu, muon.charge(), 0, qter);
+        }
+	math::XYZTLorentzVector lv(TLmu.Px(),TLmu.Py(),TLmu.Pz(),TLmu.E());
+	muoncorr.setP4(lv);
+
+        if (! pass_cut(muoncorr))
             continue;
 
-        fill_candidate(muon, muon.genParticle());
+        fill_candidate(muoncorr, muon.genParticle());
 
         reco::MuonPFIsolation pfIso = muon.pfIsolationR03();
         computeIsolations_R03(pfIso.sumChargedHadronPt, pfIso.sumNeutralHadronEt, pfIso.sumPhotonEt, pfIso.sumPUPt, muon.pt(), muon.eta(), rho);
@@ -41,20 +55,5 @@ void MuonsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup
         dxy.push_back(muon.muonBestTrack()->dxy(primary_vertex.position()));
         dz.push_back(muon.muonBestTrack()->dz(primary_vertex.position()));
         ScaleFactors::store_scale_factors({static_cast<float>(fabs(muon.eta())), static_cast<float>(muon.pt())},event.isRealData());
-	TLorentzVector TLmu;
-	float qter=1.0;
-	TLmu.SetPtEtaPhiM(muon.pt(),muon.eta(),muon.phi(),0.1);	
-	if(event.isRealData()){
-		rmcor->momcor_data(TLmu, muon.charge(), 0, qter);
-		RochCorr_pt.push_back(TLmu.Pt());
-		RochCorr_eta.push_back(TLmu.Eta());
-		RochCorr_phi.push_back(TLmu.Phi());
-	}
-	else{
-		rmcor->momcor_mc(TLmu, muon.charge(), 0, qter);
-		RochCorr_pt.push_back(TLmu.Pt());
-                RochCorr_eta.push_back(TLmu.Eta());
-                RochCorr_phi.push_back(TLmu.Phi());
-	}
     }
 }
