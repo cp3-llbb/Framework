@@ -23,7 +23,7 @@ void MuonsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup
 	float qter = 1.0;
         pat::Muon muoncorr=muon;
         TLorentzVector TLmu;
-        TLmu.SetPtEtaPhiM(muon.pt(),muon.eta(),muon.phi(),0.1);
+        TLmu.SetPxPyPzE(muon.px(),muon.py(),muon.pz(),muon.energy());
         if(event.isRealData()){
                 rmcor->momcor_data(TLmu, muon.charge(), 0, qter);
         }
