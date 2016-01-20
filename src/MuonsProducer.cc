@@ -15,22 +15,25 @@ void MuonsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup
     const reco::Vertex& primary_vertex = (*vertices_handle)[0];
 
     double rho = *rho_handle;
+
     for (const auto& muon: *muons) {
-	float qter = 1.0;
-        pat::Muon muoncorr=muon;
-        TLorentzVector TLmu;
-        TLmu.SetPxPyPzE(muon.px(),muon.py(),muon.pz(),muon.energy());
-        if(event.isRealData()){
+        pat::Muon muontemp=muon;
+        if(applyRochester){
+            float qter = 1.0;
+            TLorentzVector TLmu;
+            TLmu.SetPxPyPzE(muon.px(),muon.py(),muon.pz(),muon.energy());
+            if(event.isRealData()){
                 rmcor.momcor_data(TLmu, muon.charge(), 0, qter);
-        }
-        else{
+            }
+            else{
                 rmcor.momcor_mc(TLmu, muon.charge(), 0, qter);
+            }
+            math::XYZTLorentzVector lv(TLmu.Px(),TLmu.Py(),TLmu.Pz(),TLmu.E());
+            muontemp.setP4(lv);
         }
-        math::XYZTLorentzVector lv(TLmu.Px(),TLmu.Py(),TLmu.Pz(),TLmu.E());
-        muoncorr.setP4(lv);
-        if (! pass_cut(muoncorr))
+        if (! pass_cut(muontemp))
             continue;
-        fill_candidate(muoncorr, muon.genParticle());
+        fill_candidate(muontemp, muon.genParticle());
         reco::MuonPFIsolation pfIso = muon.pfIsolationR03();
         computeIsolations_R03(pfIso.sumChargedHadronPt, pfIso.sumNeutralHadronEt, pfIso.sumPhotonEt, pfIso.sumPUPt, muon.pt(), muon.eta(), rho);
 

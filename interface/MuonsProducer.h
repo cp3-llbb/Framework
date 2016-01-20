@@ -17,6 +17,7 @@ class MuonsProducer: public LeptonsProducer<pat::Muon>, public ScaleFactors {
             LeptonsProducer(name, tree, config), ScaleFactors(const_cast<ROOT::TreeGroup&>(tree))
         {
             ScaleFactors::create_branches(config);
+            applyRochester = config.getUntrackedParameter<bool>("applyRochester");
         }
 
         virtual ~MuonsProducer() {}
@@ -32,6 +33,7 @@ class MuonsProducer: public LeptonsProducer<pat::Muon>, public ScaleFactors {
     private:
         // Tokens
         edm::EDGetTokenT<std::vector<reco::Vertex>> m_vertices_token;
+        bool applyRochester;
     public:
         // Tree members
         std::vector<bool>& isLoose = tree["isLoose"].write<std::vector<bool>>();
