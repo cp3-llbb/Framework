@@ -237,6 +237,8 @@ def create(isData, era, globalTag=None, analyzers=cms.PSet(), redoJEC=False, JEC
     process.framework.producers.jets.parameters.cut = cms.untracked.string("pt > 10")
     process.framework.producers.jets.parameters.btags = cms.untracked.vstring(bTagDiscriminators)
 
+    process.framework.producers.muons.parameters.applyRochester = cms.untracked.bool(True)
+
     process.framework.producers.fat_jets.parameters.cut = cms.untracked.string("pt > 200")
 
     if era == eras.Run2_25ns:

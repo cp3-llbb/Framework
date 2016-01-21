@@ -7,6 +7,8 @@
 #include <DataFormats/VertexReco/interface/Vertex.h>
 #include <DataFormats/PatCandidates/interface/Muon.h>
 
+#include <cp3_llbb/Framework/interface/rochcor2015.h>
+
 #include <utility>
 
 class MuonsProducer: public LeptonsProducer<pat::Muon>, public ScaleFactors {
@@ -15,6 +17,9 @@ class MuonsProducer: public LeptonsProducer<pat::Muon>, public ScaleFactors {
             LeptonsProducer(name, tree, config), ScaleFactors(const_cast<ROOT::TreeGroup&>(tree))
         {
             ScaleFactors::create_branches(config);
+            if (config.exists("applyRochester")) {
+                applyRochester = config.getUntrackedParameter<bool>("applyRochester");
+            }
         }
 
         virtual ~MuonsProducer() {}
@@ -30,7 +35,7 @@ class MuonsProducer: public LeptonsProducer<pat::Muon>, public ScaleFactors {
     private:
         // Tokens
         edm::EDGetTokenT<std::vector<reco::Vertex>> m_vertices_token;
-
+        bool applyRochester = false ;
     public:
         // Tree members
         std::vector<bool>& isLoose = tree["isLoose"].write<std::vector<bool>>();
@@ -41,6 +46,7 @@ class MuonsProducer: public LeptonsProducer<pat::Muon>, public ScaleFactors {
 
         BRANCH(dxy, std::vector<float>);
         BRANCH(dz, std::vector<float>);
+        rochcor2015 rmcor;
 };
 
 #endif
