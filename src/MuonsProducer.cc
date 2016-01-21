@@ -19,16 +19,9 @@ void MuonsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup
     for (auto muon: *muons) {
         if(applyRochester){
             float qter = 1.0;
-            TLorentzVector TLmu;
-            TLmu.SetPxPyPzE(muon.px(),muon.py(),muon.pz(),muon.energy());
-            if(event.isRealData()){
-                rmcor.momcor_data(TLmu, muon.charge(), 0, qter);
-            }
-            else{
-                rmcor.momcor_mc(TLmu, muon.charge(), 0, qter);
-            }
-            math::XYZTLorentzVector lv(TLmu.Px(),TLmu.Py(),TLmu.Pz(),TLmu.E());
-            muon.setP4(lv);
+            TLorentzVector TLmu(muon.px(),muon.py(),muon.pz(),muon.energy());
+            (event.isRealData())?rmcor.momcor_data(TLmu, muon.charge(), 0, qter):rmcor.momcor_mc(TLmu, muon.charge(), 0, qter);
+            muon.setP4(math::XYZTLorentzVector(TLmu.Px(),TLmu.Py(),TLmu.Pz(),TLmu.E()));
         }
         if (! pass_cut(muon))
             continue;
