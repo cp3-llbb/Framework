@@ -16,8 +16,7 @@ void MuonsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup
 
     double rho = *rho_handle;
 
-    for (const auto& muon: *muons) {
-        pat::Muon muontemp=muon;
+    for (auto muon: *muons) {
         if(applyRochester){
             float qter = 1.0;
             TLorentzVector TLmu;
@@ -29,11 +28,11 @@ void MuonsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup
                 rmcor.momcor_mc(TLmu, muon.charge(), 0, qter);
             }
             math::XYZTLorentzVector lv(TLmu.Px(),TLmu.Py(),TLmu.Pz(),TLmu.E());
-            muontemp.setP4(lv);
+            muon.setP4(lv);
         }
-        if (! pass_cut(muontemp))
+        if (! pass_cut(muon))
             continue;
-        fill_candidate(muontemp, muon.genParticle());
+        fill_candidate(muon, muon.genParticle());
         reco::MuonPFIsolation pfIso = muon.pfIsolationR03();
         computeIsolations_R03(pfIso.sumChargedHadronPt, pfIso.sumNeutralHadronEt, pfIso.sumPhotonEt, pfIso.sumPUPt, muon.pt(), muon.eta(), rho);
 
