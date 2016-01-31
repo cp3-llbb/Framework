@@ -62,7 +62,7 @@ ExTreeMaker::ExTreeMaker(const edm::ParameterSet& iConfig):
         m_output->cd();
 
         TTree* tree = new TTree("t", "t");
-        tree->SetAutoFlush(140);
+        tree->SetAutoFlush(100);
         tree->SetMaxVirtualSize(500 * 1024 * 1024); // Allow max 500 MB for the tree
         m_wrapper.reset(new ROOT::TreeWrapper(tree));
 
