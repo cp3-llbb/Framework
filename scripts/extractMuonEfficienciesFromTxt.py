@@ -8,8 +8,8 @@ def format_eta_bin(eta_bin):
     return 'ptabseta<%.1f' % (eta_bin[1]) if (eta_bin[0] == 0) else 'ptabseta%.1f-%.1f' % (eta_bin[0], eta_bin[1])
 
 parser = argparse.ArgumentParser()
-parser.add_argument('file', help='Txt file containing electron scale factors')
-parser.add_argument('-s', '--suffix', help='Suffix to append at the end of the output filename', required=True)
+parser.add_argument('file', help='Txt file containing muon trigger efficiencies')
+parser.add_argument('-s', '--suffix', help='Suffix to append at the end of the output filename', required=False)
 
 args = parser.parse_args()
 
@@ -79,7 +79,10 @@ for i in range(0, len(eta_binning) - 1):
 # Save JSON file
 import os
 wp = os.path.splitext(os.path.basename(args.file))[0]
-filename = 'Muon_%s_%s.json' % (wp, args.suffix)
+if args.suffix :
+    filename = 'Muon_%s_%s.json' % (wp, args.suffix)
+else :
+    filename = 'Muon_%s.json' %wp
 with open(filename, 'w') as j:
     import json
     json.dump(json_content, j, indent=2)
