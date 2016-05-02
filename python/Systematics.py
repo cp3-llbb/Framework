@@ -178,7 +178,7 @@ class JERSystematics(JetsSystematics):
         module = cms.EDProducer('SmearedPATJetProducer',
                     src = cms.InputTag(self.jetCollection),
                     enabled = cms.bool(True),
-                    rho = cms.InputTag("fixedGridRhoAll"),
+                    rho = cms.InputTag("fixedGridRhoFastjetAll"),
                     resolutionFile = cms.FileInPath(self.resolutionFile),
                     scaleFactorFile = cms.FileInPath(self.scaleFactorFile),
 
