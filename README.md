@@ -9,7 +9,7 @@ Common framework for all cp3-llbb analyses
 
 ## CMSSW release
 
-**CMSSW 7.6.3**
+**CMSSW_7_6_5**
 
 ## First time setup instructions
 
@@ -17,15 +17,12 @@ Common framework for all cp3-llbb analyses
 source /nfs/soft/grid/ui_sl6/setup/grid-env.sh
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 export SCRAM_ARCH=slc6_amd64_gcc493
-cmsrel CMSSW_7_6_3_patch2
-cd CMSSW_7_6_3_patch2/src
+cmsrel CMSSW_7_6_5
+cd CMSSW_7_6_5/src
 cmsenv
 
 # JER stuff
 git cms-merge-topic blinkseb:smeared_jet_producer
-
-# Jet tool box
-git clone https://github.com/cms-jet/JetToolbox JMEAnalysis/JetToolbox
 
 # CP3-llbb framework itself
 git clone -o upstream git@github.com:blinkseb/TreeWrapper.git cp3_llbb/TreeWrapper
