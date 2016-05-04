@@ -313,7 +313,7 @@ class Framework(object):
         self.process.slimmedJetsSmeared = cms.EDProducer('SmearedPATJetProducer',
                     src = cms.InputTag(self.__miniaod_jet_collection),
                     enabled = cms.bool(True),
-                    rho = cms.InputTag("fixedGridRhoAll"),
+                    rho = cms.InputTag("fixedGridRhoFastjetAll"),
                     resolutionFile = cms.FileInPath(self.__jer_resolution_file),
                     scaleFactorFile = cms.FileInPath(self.__jer_scale_factor_file),
 
