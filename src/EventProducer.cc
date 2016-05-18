@@ -199,6 +199,10 @@ void EventProducer::beginRun(const edm::Run& iRun, const edm::EventSetup& eventS
         std::cout << "Number of scales variation weights: " << m_scale_variations_matching.size() << std::endl;
 #endif
 
+        if (!m_scale_variations_matching.empty() && m_scale_variations_matching.size() != 6) {
+            std::cout << "\033[0;31m" << "Warning: invalid number of scale variation (6 was expected, only " << m_scale_variations_matching.size() << " found)." << "\033[0m" << std::endl;
+        }
+
         break;
     }
 
@@ -296,6 +300,16 @@ void EventProducer::produce(edm::Event& event_, const edm::EventSetup& eventSetu
             int status_ = lhe_hepeup.ISTUP[iparticle];
             if ( status_ == 1 && ((std::abs(pdgid_) >= 1 && std::abs(pdgid_) <= 6 ) || (std::abs(pdgid_) == 21)) )
                 ht += std::sqrt(lhe_particles[iparticle][0]*lhe_particles[iparticle][0] + lhe_particles[iparticle][1]*lhe_particles[iparticle][1]);
+        }
+
+        // Handle PDF & scale weights
+
+        // No weight on some events...
+        if (lhe_info->weights().empty()) {
+            std::cout << "Warning: no weight for this event." << std::endl;
+            // Set scale weights to 1. PDF weights are already set to 1 by default
+            scale_weights.resize(6, 1);
+            goto end;
         }
 
         if (isLO && !scalup_decision_taken) {
