@@ -20,8 +20,8 @@ class Framework(object):
         self.__miniaod_jet_collection = 'slimmedJets'
         self.__miniaod_gen_jet_collection = 'slimmedGenJets'
         self.__miniaod_met_collection = 'slimmedMETs'
-        self.__jer_resolution_file = 'cp3_llbb/Framework/data/Systematics/Summer15_25nsV6_MC_PtResolution_AK4PFchs.txt'
-        self.__jer_scale_factor_file = 'cp3_llbb/Framework/data/Systematics/Summer15_25nsV6_DATAMCSF_AK4PFchs.txt'
+        self.__jer_resolution_file = 'cp3_llbb/Framework/data/Systematics/Fall15_25nsV2_MC_PtResolution_AK4PFchs.txt'
+        self.__jer_scale_factor_file = 'cp3_llbb/Framework/data/Systematics/Fall15_25nsV2_MC_SF_AK4PFchs.txt'
 
         self.isData = isData
         self.era = era
