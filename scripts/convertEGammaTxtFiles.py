@@ -22,6 +22,7 @@ parser.add_argument('-p', '--prefix', help='Prefix to prepend to the output file
 parser.add_argument('-s', '--suffix', help='Suffix to append at the end of the output filename')
 parser.add_argument('--no-systs', action='store_true', dest='no_systs', help='If True, do not consider the systematics errors from the input file')
 parser.add_argument('--variated-systematics', action='store_true', dest='variated_systs', help='Use this flag if the systematics uncertainties are stored like "eff_mc + syst" instead of just "syst')
+parser.add_argument('--sf', action='store_true', dest='scale_factors', help='The text file already contains SFs')
 parser.add_argument('--indent', help='Identation of the JSON file', dest="indent", type=int, default=None)
 
 args = parser.parse_args()
@@ -61,14 +62,19 @@ with open(args.file, 'r') as f:
         else:
             pt_binning.append(pt_bin[1])
 
-        data_err_indexes = (5, 5)
-        mc_index = 6
-        mc_err_indexes = (7, 7)
+        if not args.scale_factors:
+            data_err_indexes = (5, 5)
+            mc_index = 6
+            mc_err_indexes = (7, 7)
 
-        if args.asymm:
-            data_err_indexes = (5, 6)
-            mc_index = 7
-            mc_err_indexes = (8, 9)
+            if args.asymm:
+                data_err_indexes = (5, 6)
+                mc_index = 7
+                mc_err_indexes = (8, 9)
+        else:
+            data_err_indexes = (5, 5)
+            mc_index = 4
+            mc_err_indexes = (5, 5)
 
         eff = {
                 'data': float(data[4]),
@@ -107,7 +113,7 @@ for i in range(0, len(eta_binning) - 1):
         pt_bin = (pt_binning[j], pt_binning[j + 1])
         eff = efficiencies[eta_bin][pt_bin]
 
-        scale_factor = eff['data'] / eff['mc']
+        scale_factor = eff['data'] if args.scale_factors else eff['data'] / eff['mc']
 
         mc_error_up_squared = eff['mc_err'][0]**2
         mc_error_down_squared = eff['mc_err'][1]**2
@@ -135,6 +141,9 @@ for i in range(0, len(eta_binning) - 1):
 
         scale_factor_error_up = math.sqrt(data_error_up_squared / eff['data']**2 + mc_error_up_squared / eff['mc']**2)
         scale_factor_error_down = math.sqrt(data_error_down_squared / eff['data']**2 + mc_error_down_squared / eff['mc']**2)
+
+        if args.scale_factors:
+            scale_factor_error_up = scale_factor_error_down = eff['data_err'][0]
 
         pt_data = {'bin': [pt_binning[j], pt_binning[j + 1]], 'value': scale_factor, 'error_low': scale_factor_error_down, 'error_high': scale_factor_error_up}
 

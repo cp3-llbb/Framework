@@ -20,7 +20,7 @@ default_configuration = cms.PSet(
                 id_medium = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/Electron_CutBasedID_MediumWP_fromTemplates_withSyst_76X.json'),
                 id_tight = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/Electron_CutBasedID_TightWP_fromTemplates_withSyst_76X.json'),
 
-                hww_wp = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/Electrons_HWW_CutBasedID_TightWP_fromTemplates_withSyst_v1_reco_id_iso.json'),
+                hww_wp = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/Electrons_HWW_CutBasedID_TightWP_76X_forHWW_Final.json'),
                 )
             ),
         )
