@@ -26,7 +26,7 @@ git cms-merge-topic blinkseb:smeared_jet_producer
 
 # CP3-llbb framework itself
 git clone -o upstream git@github.com:blinkseb/TreeWrapper.git cp3_llbb/TreeWrapper
-git clone -b CMSSW_7_6_3p -o upstream git@github.com:cp3-llbb/Framework.git cp3_llbb/Framework
+git clone -b CMSSW_7_6_5p -o upstream git@github.com:cp3-llbb/Framework.git cp3_llbb/Framework
 
 scram b -j 4
 
