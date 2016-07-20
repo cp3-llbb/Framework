@@ -42,9 +42,9 @@ void ElectronsProducer::produce(edm::Event& event, const edm::EventSetup& eventS
         dxy.push_back(electron.gsfTrack()->dxy(primary_vertex.position()));
         dz.push_back(electron.gsfTrack()->dz(primary_vertex.position()));
         dca.push_back(electron.dB(pat::Electron::PV3D)/electron.edB(pat::Electron::PV3D));
-        ecalPFClusterIso.push_back(electron.ecalPFClusterIso());
-        hcalPFClusterIso.push_back(electron.hcalPFClusterIso());
-        trackIso.push_back(electron.trackIso());
+        relEcalPFClusterIso.push_back(electron.ecalPFClusterIso()/electron.pt());
+        relHcalPFClusterIso.push_back(electron.hcalPFClusterIso()/electron.pt());
+        relTrackIso.push_back(electron.trackIso()/electron.pt());
         ScaleFactors::store_scale_factors({static_cast<float>(fabs(electron.eta())), static_cast<float>(electron.pt())}, event.isRealData());
     }
     Identifiable::clean();

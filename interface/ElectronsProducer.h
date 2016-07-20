@@ -38,9 +38,9 @@ class ElectronsProducer: public LeptonsProducer<pat::Electron>, public Identifia
         BRANCH(dz, std::vector<float>);
         BRANCH(dca, std::vector<float>);
 
-        BRANCH(ecalPFClusterIso, std::vector<float>);
-        BRANCH(hcalPFClusterIso, std::vector<float>);
-        BRANCH(trackIso, std::vector<float>);
+        BRANCH(relEcalPFClusterIso, std::vector<float>);
+        BRANCH(relHcalPFClusterIso, std::vector<float>);
+        BRANCH(relTrackIso, std::vector<float>);
 };
 
 #endif
