@@ -439,7 +439,7 @@ class Framework(object):
             switchOnVIDElectronIdProducer(self.process, DataFormat.MiniAOD)
 
             id_modules = [
-                    'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_25ns_V1_cff',
+                    'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Summer16_80X_V1_cff',
                     ]
 
             for mod in id_modules:

@@ -28,6 +28,9 @@ git cms-init
 git clone -o upstream git@github.com:blinkseb/TreeWrapper.git cp3_llbb/TreeWrapper
 git clone -b CMSSW_8_0_6p -o upstream git@github.com:cp3-llbb/Framework.git cp3_llbb/Framework
 
+# Stuff not yet in central CMSSW:
+git cms-merge-topic ikrav:egm_id_80X_v1 # 8010+ electron ID WPs
+
 scram b -j 4
 
 cd ${CMSSW_BASE}/src/cp3_llbb/Framework

@@ -9,10 +9,10 @@ default_configuration = cms.PSet(
             ea_R03 = cms.untracked.FileInPath('RecoEgamma/ElectronIdentification/data/PHYS14/effAreaElectrons_cone03_pfNeuHadronsAndPhotons.txt'),
             ea_R04 = cms.untracked.FileInPath('cp3_llbb/Framework/data/effAreaElectrons_cone04_pfNeuHadronsAndPhotons.txt'),
             ids = cms.untracked.VInputTag(
-                'egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V1-standalone-veto',
-                'egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V1-standalone-loose',
-                'egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V1-standalone-medium',
-                'egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V1-standalone-tight',
+                'egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-veto',
+                'egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-loose',
+                'egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-medium',
+                'egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-tight',
                 ),
             scale_factors = cms.untracked.PSet(
                 id_veto = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/Electron_CutBasedID_VetoWP_fromTemplates_withSyst_76X.json'),
