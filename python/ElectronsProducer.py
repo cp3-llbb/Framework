@@ -6,7 +6,7 @@ default_configuration = cms.PSet(
         enable = cms.bool(True),
         parameters = cms.PSet(
             src = cms.untracked.InputTag('slimmedElectrons'),
-            ea_R03 = cms.untracked.FileInPath('RecoEgamma/ElectronIdentification/data/PHYS14/effAreaElectrons_cone03_pfNeuHadronsAndPhotons.txt'),
+            ea_R03 = cms.untracked.FileInPath('RecoEgamma/ElectronIdentification/data/Summer16/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_80X.txt'),
             ea_R04 = cms.untracked.FileInPath('cp3_llbb/Framework/data/effAreaElectrons_cone04_pfNeuHadronsAndPhotons.txt'),
             ids = cms.untracked.VInputTag(
                 'egmGsfElectronIDs:cutBasedElectronID-Summer16-80X-V1-veto',
