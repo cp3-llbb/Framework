@@ -1,6 +1,0 @@
-Files found here:
-https://twiki.cern.ch/twiki/bin/view/CMS/MuonReferenceEffsRun2#Muon_reconstruction_identificati
-
-HWW scale-factors:
- - File HWW_TnP_MediumIDandISO_Data_MC_25ns_PTvsETA_binBig.txt created by merging TnP_MediumIDandISO_DY_madgraph25nsLikeRun2015D_25ns_PTvsETA_binBig_HWW.txt and and into one file
- - https://twiki.cern.ch/twiki/bin/view/CMS/HWW2015TriggerResults
