@@ -31,8 +31,7 @@ class JetsProducer: public CandidatesProducer<pat::Jet>, public BTaggingScaleFac
                     std::cout << "  -> storing bjet energy regression, with xml file " << regressionFile << std::endl;
                     bjetRegressionReader.reset(new TMVA::Reader());
                     bjetRegressionReader->AddVariable("Jet_pt", &Jet_pt);
-                    bjetRegressionReader->AddVariable("Jet_corr", &Jet_corr);
-                    bjetRegressionReader->AddVariable("rho", &rho);
+                    bjetRegressionReader->AddVariable("nPVs", &nPVs);
                     bjetRegressionReader->AddVariable("Jet_eta", &Jet_eta);
                     bjetRegressionReader->AddVariable("Jet_mt", &Jet_mt);
                     bjetRegressionReader->AddVariable("Jet_leadTrackPt", &Jet_leadTrackPt);
@@ -41,13 +40,12 @@ class JetsProducer: public CandidatesProducer<pat::Jet>, public BTaggingScaleFac
                     bjetRegressionReader->AddVariable("Jet_leptonDeltaR", &Jet_leptonDeltaR);
                     bjetRegressionReader->AddVariable("Jet_neHEF", &Jet_neHEF);
                     bjetRegressionReader->AddVariable("Jet_neEmEF", &Jet_neEmEF);
-                    bjetRegressionReader->AddVariable("Jet_chMult", &Jet_chMult);
                     bjetRegressionReader->AddVariable("Jet_vtxPt", &Jet_vtxPt);
                     bjetRegressionReader->AddVariable("Jet_vtxMass", &Jet_vtxMass);
                     bjetRegressionReader->AddVariable("Jet_vtx3dL", &Jet_vtx3dL);
                     bjetRegressionReader->AddVariable("Jet_vtxNtrk", &Jet_vtxNtrk);
                     bjetRegressionReader->AddVariable("Jet_vtx3deL", &Jet_vtx3deL);
-                    bjetRegressionReader->BookMVA("BDTG method", regressionFile.c_str());
+                    bjetRegressionReader->BookMVA("BDT::BDTG", regressionFile.c_str());
                 }
             } else {
                 computeRegression = false;
@@ -58,7 +56,7 @@ class JetsProducer: public CandidatesProducer<pat::Jet>, public BTaggingScaleFac
 
         virtual void doConsumes(const edm::ParameterSet& config, edm::ConsumesCollector&& collector) override {
             m_jets_token = collector.consumes<std::vector<pat::Jet>>(config.getUntrackedParameter<edm::InputTag>("jets", edm::InputTag("slimmedJets")));
-            m_rho_token = collector.consumes<double>(config.getUntrackedParameter<edm::InputTag>("rho", edm::InputTag("fixedGridRhoFastjetAll")));
+            m_vertices_token = collector.consumes<std::vector<reco::Vertex>>(config.getUntrackedParameter<edm::InputTag>("vertices", edm::InputTag("offlineSlimmedPrimaryVertices")));
         }
 
         virtual void produce(edm::Event& event, const edm::EventSetup& eventSetup) override;
@@ -72,7 +70,7 @@ class JetsProducer: public CandidatesProducer<pat::Jet>, public BTaggingScaleFac
 
         // Tokens
         edm::EDGetTokenT<std::vector<pat::Jet>> m_jets_token;
-        edm::EDGetTokenT<double> m_rho_token;
+        edm::EDGetTokenT<std::vector<reco::Vertex>> m_vertices_token;
 
         std::map<std::string, std::vector<float>*> m_btag_discriminators;
         // regression stuff
@@ -80,8 +78,7 @@ class JetsProducer: public CandidatesProducer<pat::Jet>, public BTaggingScaleFac
         std::string regressionFile;
         std::unique_ptr<TMVA::Reader> bjetRegressionReader;
         float Jet_pt;
-        float Jet_corr;
-        float rho;
+        float nPVs;
         float Jet_eta;
         float Jet_mt;
         float Jet_leadTrackPt;
@@ -90,7 +87,6 @@ class JetsProducer: public CandidatesProducer<pat::Jet>, public BTaggingScaleFac
         float Jet_leptonDeltaR;
         float Jet_neHEF;
         float Jet_neEmEF;
-        float Jet_chMult;
         float Jet_vtxPt;
         float Jet_vtxMass;
         float Jet_vtx3dL;
@@ -114,7 +110,6 @@ class JetsProducer: public CandidatesProducer<pat::Jet>, public BTaggingScaleFac
         TRANSIENT_BRANCH(leptonPtRel, std::vector<float>);
         TRANSIENT_BRANCH(leptonPt, std::vector<float>);
         TRANSIENT_BRANCH(leptonDeltaR, std::vector<float>);
-        TRANSIENT_BRANCH(chargedMultiplicity, std::vector<float>);
         TRANSIENT_BRANCH(leadTrackPt, std::vector<float>);
         BRANCH(regPt, std::vector<float>);
 

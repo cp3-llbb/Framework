@@ -7,8 +7,8 @@ void JetsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup)
     edm::Handle<std::vector<pat::Jet>> jets;
     event.getByToken(m_jets_token, jets);
 
-    edm::Handle<double> rho_handle;
-    event.getByToken(m_rho_token, rho_handle);
+    edm::Handle<std::vector<reco::Vertex>> vertices_handle;
+    event.getByToken(m_vertices_token, vertices_handle);
 
     for (const auto &jet: *jets) {
         if (! pass_cut(jet))
@@ -20,7 +20,16 @@ void JetsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup)
         partonFlavor.push_back(jet.partonFlavour());
         hadronFlavor.push_back(jet.hadronFlavour());
         if (computeRegression) {
-            // Variables needed for 74X b-jet energy regression as of January 26th 2016
+            // Variables needed for 80X b-jet energy regression as of September 29th 2016
+            float nPVs_ = 0.;
+            for (const auto& vertex: *vertices_handle)
+            {
+                if (vertex.isFake()) continue;
+                if (vertex.ndof() <= 4) continue;
+                if (abs(vertex.z()) > 24) continue;
+                if (vertex.position().Rho() > 2) continue;
+                nPVs_ += 1.;
+            }
             neutralHadronEnergyFraction.push_back(jet.neutralHadronEnergyFraction());
             neutralEmEnergyFraction.push_back(jet.neutralEmEnergyFraction());
             vtxMass.push_back(jet.userFloat("vtxMass"));
@@ -63,12 +72,10 @@ void JetsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup)
             leptonPtRel.push_back(leptonPtRel_);
             leptonPt.push_back(leptonPt_);
             leptonDeltaR.push_back(leptonDeltaR_);
-            chargedMultiplicity.push_back(jet.chargedMultiplicity());
 
             // Regression itself
             Jet_pt = jet.pt();
-            Jet_corr = jet.jecFactor("Uncorrected");
-            rho = *rho_handle;
+            nPVs = nPVs_;
             Jet_eta = jet.eta();
             Jet_mt = jet.mt();
             Jet_leadTrackPt = leadTrackPt_;
@@ -77,13 +84,12 @@ void JetsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup)
             Jet_leptonDeltaR = leptonDeltaR_;
             Jet_neHEF = jet.neutralHadronEnergyFraction();
             Jet_neEmEF = jet.neutralEmEnergyFraction();
-            Jet_chMult = jet.chargedMultiplicity();
             Jet_vtxPt = vtxPt_;
             Jet_vtxMass = jet.userFloat("vtxMass");
             Jet_vtx3dL = jet.userFloat("vtx3DVal");
             Jet_vtxNtrk = jet.userFloat("vtxNtracks");
             Jet_vtx3deL = jet.userFloat("vtx3DSig");
-            regPt.push_back((bjetRegressionReader->EvaluateRegression("BDTG method"))[0]);
+            regPt.push_back((bjetRegressionReader->EvaluateRegression("BDT::BDTG"))[0]);
         } else {
             regPt.push_back(jet.pt());
         }
