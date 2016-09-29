@@ -3,5 +3,6 @@ Files found here:
  - https://arun-afs.web.cern.ch/arun-afs/Fits_Data_ID_76X/
 
 For HWW Scale-Factors:
- - https://twiki.cern.ch/twiki/pub/CMS/HWW2015TriggerResults/CutBasedID_TightWP_fromTemplates_withSyst_v1.txt
- - https://twiki.cern.ch/twiki/bin/view/CMS/HWW2015TriggerResults
+ - https://twiki.cern.ch/twiki/bin/view/CMS/HWW2016TriggerAndIdIsoScaleFactorsResults
+ - https://github.com/latinos/LatinoAnalysis/blob/master/Gardener/python/data/idiso/ICHEP2016fullLumi/electrons_firstPart.txt
+ - https://github.com/latinos/LatinoAnalysis/blob/master/Gardener/python/data/idiso/ICHEP2016fullLumi/electrons.txt
