@@ -15,11 +15,11 @@ default_configuration = cms.PSet(
                     files = cms.untracked.VPSet(
                         cms.untracked.PSet(
                             flavor = cms.untracked.string('bjets'),
-                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_loose_bjets_mujets_CSVv2.json'),
+                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_loose_bjets_comb_CSVv2.json'),
                             ),
                         cms.untracked.PSet(
                             flavor = cms.untracked.string('cjets'),
-                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_loose_cjets_mujets_CSVv2.json'),
+                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_loose_cjets_comb_CSVv2.json'),
                             ),
                         cms.untracked.PSet(
                             flavor = cms.untracked.string('lightjets'),
@@ -33,11 +33,11 @@ default_configuration = cms.PSet(
                     files = cms.untracked.VPSet(
                         cms.untracked.PSet(
                             flavor = cms.untracked.string('bjets'),
-                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_medium_bjets_mujets_CSVv2.json'),
+                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_medium_bjets_comb_CSVv2.json'),
                             ),
                         cms.untracked.PSet(
                             flavor = cms.untracked.string('cjets'),
-                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_medium_cjets_mujets_CSVv2.json'),
+                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_medium_cjets_comb_CSVv2.json'),
                             ),
                         cms.untracked.PSet(
                             flavor = cms.untracked.string('lightjets'),
@@ -51,11 +51,11 @@ default_configuration = cms.PSet(
                     files = cms.untracked.VPSet(
                         cms.untracked.PSet(
                             flavor = cms.untracked.string('bjets'),
-                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_tight_bjets_mujets_CSVv2.json'),
+                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_tight_bjets_comb_CSVv2.json'),
                             ),
                         cms.untracked.PSet(
                             flavor = cms.untracked.string('cjets'),
-                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_tight_cjets_mujets_CSVv2.json'),
+                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_tight_cjets_comb_CSVv2.json'),
                             ),
                         cms.untracked.PSet(
                             flavor = cms.untracked.string('lightjets'),
