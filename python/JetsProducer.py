@@ -65,6 +65,6 @@ default_configuration = cms.PSet(
                     )
                 ),
                 computeRegression = cms.untracked.bool(False),
-                regressionFile = cms.untracked.FileInPath('cp3_llbb/Framework/data/BJetRegression/2016-01-25-1810_TMVARegression_BDTG.weights.xml')
+                regressionFile = cms.untracked.FileInPath('cp3_llbb/Framework/data/BJetRegression/ttbar-spring16-500k-13d-300t.weights.xml')
             )
         )
