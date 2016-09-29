@@ -1,0 +1,1018 @@
+{
+  "variables": [
+    "Eta", 
+    "Pt"
+  ], 
+  "error_type": "absolute", 
+  "data": [
+    {
+      "bin": [
+        -2.5, 
+        -2.1
+      ], 
+      "values": [
+        {
+          "bin": [
+            0.0, 
+            23.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.009, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            23.0, 
+            24.0
+          ], 
+          "error_low": 0.002, 
+          "value": 0.207, 
+          "error_high": 0.002
+        }, 
+        {
+          "bin": [
+            24.0, 
+            25.0
+          ], 
+          "error_low": 0.003, 
+          "value": 0.622, 
+          "error_high": 0.003
+        }, 
+        {
+          "bin": [
+            25.0, 
+            26.0
+          ], 
+          "error_low": 0.003, 
+          "value": 0.858, 
+          "error_high": 0.003
+        }, 
+        {
+          "bin": [
+            26.0, 
+            30.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.939, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            30.0, 
+            35.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.959, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            35.0, 
+            40.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.967, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            40.0, 
+            45.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.975, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            45.0, 
+            50.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.98, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            50.0, 
+            100.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.986, 
+          "error_high": 0.0
+        }
+      ]
+    }, 
+    {
+      "bin": [
+        -2.1, 
+        -1.6
+      ], 
+      "values": [
+        {
+          "bin": [
+            0.0, 
+            23.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.031, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            23.0, 
+            24.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.522, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            24.0, 
+            25.0
+          ], 
+          "error_low": 0.002, 
+          "value": 0.874, 
+          "error_high": 0.002
+        }, 
+        {
+          "bin": [
+            25.0, 
+            26.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.97, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            26.0, 
+            30.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.98, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            30.0, 
+            35.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.986, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            35.0, 
+            40.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.987, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            40.0, 
+            45.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.99, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            45.0, 
+            50.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.99, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            50.0, 
+            100.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.991, 
+          "error_high": 0.0
+        }
+      ]
+    }, 
+    {
+      "bin": [
+        -1.6, 
+        -1.4
+      ], 
+      "values": [
+        {
+          "bin": [
+            0.0, 
+            23.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.155, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            23.0, 
+            24.0
+          ], 
+          "error_low": 0.009, 
+          "value": 0.554, 
+          "error_high": 0.009
+        }, 
+        {
+          "bin": [
+            24.0, 
+            25.0
+          ], 
+          "error_low": 0.011, 
+          "value": 0.838, 
+          "error_high": 0.011
+        }, 
+        {
+          "bin": [
+            25.0, 
+            26.0
+          ], 
+          "error_low": 0.011, 
+          "value": 0.934, 
+          "error_high": 0.011
+        }, 
+        {
+          "bin": [
+            26.0, 
+            30.0
+          ], 
+          "error_low": 0.002, 
+          "value": 0.971, 
+          "error_high": 0.002
+        }, 
+        {
+          "bin": [
+            30.0, 
+            35.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.97, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            35.0, 
+            40.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.978, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            40.0, 
+            45.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.974, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            45.0, 
+            50.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.974, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            50.0, 
+            100.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.972, 
+          "error_high": 0.001
+        }
+      ]
+    }, 
+    {
+      "bin": [
+        -1.4, 
+        -0.8
+      ], 
+      "values": [
+        {
+          "bin": [
+            0.0, 
+            23.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.024, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            23.0, 
+            24.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.587, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            24.0, 
+            25.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.856, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            25.0, 
+            26.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.937, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            26.0, 
+            30.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.96, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            30.0, 
+            35.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.969, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            35.0, 
+            40.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.973, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            40.0, 
+            45.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.978, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            45.0, 
+            50.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.977, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            50.0, 
+            100.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.979, 
+          "error_high": 0.0
+        }
+      ]
+    }, 
+    {
+      "bin": [
+        -0.8, 
+        0.0
+      ], 
+      "values": [
+        {
+          "bin": [
+            0.0, 
+            23.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.031, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            23.0, 
+            24.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.732, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            24.0, 
+            25.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.922, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            25.0, 
+            26.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.937, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            26.0, 
+            30.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.949, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            30.0, 
+            35.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.962, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            35.0, 
+            40.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.972, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            40.0, 
+            45.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.974, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            45.0, 
+            50.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.975, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            50.0, 
+            100.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.979, 
+          "error_high": 0.0
+        }
+      ]
+    }, 
+    {
+      "bin": [
+        0.0, 
+        0.8
+      ], 
+      "values": [
+        {
+          "bin": [
+            0.0, 
+            23.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.034, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            23.0, 
+            24.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.721, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            24.0, 
+            25.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.915, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            25.0, 
+            26.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.936, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            26.0, 
+            30.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.941, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            30.0, 
+            35.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.95, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            35.0, 
+            40.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.96, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            40.0, 
+            45.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.961, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            45.0, 
+            50.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.964, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            50.0, 
+            100.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.969, 
+          "error_high": 0.0
+        }
+      ]
+    }, 
+    {
+      "bin": [
+        0.8, 
+        1.4
+      ], 
+      "values": [
+        {
+          "bin": [
+            0.0, 
+            23.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.023, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            23.0, 
+            24.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.54, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            24.0, 
+            25.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.872, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            25.0, 
+            26.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.936, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            26.0, 
+            30.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.956, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            30.0, 
+            35.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.972, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            35.0, 
+            40.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.972, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            40.0, 
+            45.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.977, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            45.0, 
+            50.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.977, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            50.0, 
+            100.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.979, 
+          "error_high": 0.0
+        }
+      ]
+    }, 
+    {
+      "bin": [
+        1.4, 
+        1.6
+      ], 
+      "values": [
+        {
+          "bin": [
+            0.0, 
+            23.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.133, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            23.0, 
+            24.0
+          ], 
+          "error_low": 0.012, 
+          "value": 0.571, 
+          "error_high": 0.012
+        }, 
+        {
+          "bin": [
+            24.0, 
+            25.0
+          ], 
+          "error_low": 0.012, 
+          "value": 0.8, 
+          "error_high": 0.012
+        }, 
+        {
+          "bin": [
+            25.0, 
+            26.0
+          ], 
+          "error_low": 0.011, 
+          "value": 0.906, 
+          "error_high": 0.011
+        }, 
+        {
+          "bin": [
+            26.0, 
+            30.0
+          ], 
+          "error_low": 0.002, 
+          "value": 0.98, 
+          "error_high": 0.002
+        }, 
+        {
+          "bin": [
+            30.0, 
+            35.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.985, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            35.0, 
+            40.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.983, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            40.0, 
+            45.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.983, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            45.0, 
+            50.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.981, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            50.0, 
+            100.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.981, 
+          "error_high": 0.001
+        }
+      ]
+    }, 
+    {
+      "bin": [
+        1.6, 
+        2.1
+      ], 
+      "values": [
+        {
+          "bin": [
+            0.0, 
+            23.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.018, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            23.0, 
+            24.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.45, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            24.0, 
+            25.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.8, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            25.0, 
+            26.0
+          ], 
+          "error_low": 0.001, 
+          "value": 0.95, 
+          "error_high": 0.001
+        }, 
+        {
+          "bin": [
+            26.0, 
+            30.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.98, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            30.0, 
+            35.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.988, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            35.0, 
+            40.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.991, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            40.0, 
+            45.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.99, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            45.0, 
+            50.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.993, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            50.0, 
+            100.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.994, 
+          "error_high": 0.0
+        }
+      ]
+    }, 
+    {
+      "bin": [
+        2.1, 
+        2.5
+      ], 
+      "values": [
+        {
+          "bin": [
+            0.0, 
+            23.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.008, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            23.0, 
+            24.0
+          ], 
+          "error_low": 0.002, 
+          "value": 0.217, 
+          "error_high": 0.002
+        }, 
+        {
+          "bin": [
+            24.0, 
+            25.0
+          ], 
+          "error_low": 0.002, 
+          "value": 0.549, 
+          "error_high": 0.002
+        }, 
+        {
+          "bin": [
+            25.0, 
+            26.0
+          ], 
+          "error_low": 0.002, 
+          "value": 0.79, 
+          "error_high": 0.002
+        }, 
+        {
+          "bin": [
+            26.0, 
+            30.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.917, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            30.0, 
+            35.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.961, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            35.0, 
+            40.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.969, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            40.0, 
+            45.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.975, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            45.0, 
+            50.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.979, 
+          "error_high": 0.0
+        }, 
+        {
+          "bin": [
+            50.0, 
+            100.0
+          ], 
+          "error_low": 0.0, 
+          "value": 0.98, 
+          "error_high": 0.0
+        }
+      ]
+    }
+  ], 
+  "dimension": 2, 
+  "binning": {
+    "y": [
+      0.0, 
+      23.0, 
+      24.0, 
+      25.0, 
+      26.0, 
+      30.0, 
+      35.0, 
+      40.0, 
+      45.0, 
+      50.0, 
+      100.0
+    ], 
+    "x": [
+      -2.5, 
+      -2.1, 
+      -1.6, 
+      -1.4, 
+      -0.8, 
+      0.0, 
+      0.8, 
+      1.4, 
+      1.6, 
+      2.1, 
+      2.5
+    ]
+  }
+}
