@@ -32,7 +32,7 @@ for key in f.GetListOfKeys():
 
     pt_binning = []
     for i in range(1, h.GetYaxis().GetNbins() + 1):
-        if len(eta_binning) == 0:
+        if len(pt_binning) == 0:
             pt_binning.append(h.GetYaxis().GetBinLowEdge(i))
             pt_binning.append(h.GetYaxis().GetBinUpEdge(i))
         else:
