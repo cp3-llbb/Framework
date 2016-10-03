@@ -6,8 +6,14 @@ default_configuration = cms.PSet(
         enable = cms.bool(True),
         parameters = cms.PSet(
             src = cms.untracked.InputTag('slimmedMuons'),
+            # Rochester corrections
             applyRochester = cms.untracked.bool(False),
             rochesterInputFile = cms.untracked.FileInPath('cp3_llbb/Framework/data/RoccoR_13tev.txt'),
+            # Kalman Muon Calibrator corrections
+            # whichever of the two tags will be forwarded to inputTagKaMuCa for the interface/MuonProducer.h is decided in python/Framework.py
+            applyKaMuCa = cms.untracked.bool(False),
+            inputTagKaMuCaData = cms.untracked.string('DATA_80X_13TeV'),
+            inputTagKaMuCaMC = cms.untracked.string('MC_80X_13TeV'),
             ea_R03 = cms.untracked.FileInPath('cp3_llbb/Framework/data/effAreaMuons_cone03_pfNeuHadronsAndPhotons.txt'),
             ea_R04 = cms.untracked.FileInPath('cp3_llbb/Framework/data/effAreaMuons_cone04_pfNeuHadronsAndPhotons.txt'),
             scale_factors = cms.untracked.PSet(

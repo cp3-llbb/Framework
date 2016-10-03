@@ -34,6 +34,17 @@ void MuonsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup
             }
             muon.setP4(math::XYZTLorentzVector(TLmu.Px(),TLmu.Py(),TLmu.Pz(),TLmu.E()));
         }
+        if (applyKaMuCa)
+        {
+            TLorentzVector TLmu(muon.px(),muon.py(),muon.pz(),muon.energy());
+            double tmp_pt = muon.pt();
+            if (!event.isRealData())
+                tmp_pt = kamucacor->smear(muon.pt(), muon.eta());
+            double corr = kamucacor->getCorrectedPt(tmp_pt, muon.eta(), muon.phi(), muon.charge());
+            corr /= muon.pt();
+            TLmu = TLmu * corr;
+            muon.setP4(math::XYZTLorentzVector(TLmu.Px(),TLmu.Py(),TLmu.Pz(),TLmu.E()));
+        }
         if (! pass_cut(muon))
             continue;
         fill_candidate(muon, muon.genParticle());

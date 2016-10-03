@@ -30,6 +30,7 @@ git clone -b CMSSW_8_0_6p -o upstream git@github.com:cp3-llbb/Framework.git cp3_
 
 # Stuff not yet in central CMSSW:
 git cms-merge-topic ikrav:egm_id_80X_v1 # 8010+ electron ID WPs
+git clone -o Analysis https://github.com/bachtis/analysis.git -b KaMuCa_V4 KaMuCa # KalmanMuonCalibrator
 
 scram b -j 4
 

@@ -493,7 +493,9 @@ class Framework(object):
 
         if not self.isData:
             self.addProducer('gen_particles', copy.deepcopy(GenParticlesProducer.default_configuration), 0)
+            self.getProducer('muons').parameters.inputTagKaMuCa = self.getProducer('muons').parameters.inputTagKaMuCaMC
         else:
             # MET Filters
             from cp3_llbb.Framework import METFilter
             self.process.framework.filters.met = copy.deepcopy(METFilter.default_configuration)
+            self.getProducer('muons').parameters.inputTagKaMuCa = self.getProducer('muons').parameters.inputTagKaMuCaData
