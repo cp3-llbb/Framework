@@ -32,19 +32,15 @@ class MuonsProducer: public LeptonsProducer<pat::Muon>, public ScaleFactors {
                     throw edm::Exception(edm::errors::Configuration, "Trying to apply two different muon momentum corrections");
                 } else if (applyRochester) {
                     std::cout << "  -> applying rochester muon momentum corrections, with input file " << rochesterInputFile.fullPath() << std::endl;
-                    rmcor = new rochcor2016(rochesterInputFile.fullPath());
+                    rmcor.reset(new rochcor2016(rochesterInputFile.fullPath()));
                 } else if (applyKaMuCa) {
                     std::cout << "  -> applying Kalman muon calibrator (KaMuCa), with input tag: " << inputTagKaMuCa << std::endl;
-                    kamucacor = new KalmanMuonCalibrator(inputTagKaMuCa);
+                    kamucacor.reset(new KalmanMuonCalibrator(inputTagKaMuCa));
                 }
             }
         }
 
-        virtual ~MuonsProducer()
-        {
-            delete rmcor;
-            delete kamucacor;
-        }
+        virtual ~MuonsProducer() {}
 
         virtual void doConsumes(const edm::ParameterSet& config, edm::ConsumesCollector&& collector) override {
             LeptonsProducer::doConsumes(config, std::forward<edm::ConsumesCollector>(collector));
@@ -72,8 +68,8 @@ class MuonsProducer: public LeptonsProducer<pat::Muon>, public ScaleFactors {
         BRANCH(dxy, std::vector<float>);
         BRANCH(dz, std::vector<float>);
         BRANCH(dca, std::vector<float>);
-        rochcor2016 *rmcor;
-        KalmanMuonCalibrator *kamucacor;
+        std::unique_ptr<rochcor2016> rmcor;
+        std::unique_ptr<KalmanMuonCalibrator> kamucacor;
 };
 
 #endif

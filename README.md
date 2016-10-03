@@ -29,8 +29,14 @@ git clone -o upstream git@github.com:blinkseb/TreeWrapper.git cp3_llbb/TreeWrapp
 git clone -b CMSSW_8_0_6p -o upstream git@github.com:cp3-llbb/Framework.git cp3_llbb/Framework
 
 # Stuff not yet in central CMSSW:
-git cms-merge-topic ikrav:egm_id_80X_v1 # 8010+ electron ID WPs
-git clone -o Analysis https://github.com/bachtis/analysis.git -b KaMuCa_V4 KaMuCa # KalmanMuonCalibrator
+# 8010+ electron ID WPs
+git cms-merge-topic ikrav:egm_id_80X_v1
+# KalmanMuonCalibrator
+git clone -o upstream https://github.com/bachtis/analysis.git -b KaMuCa_V4 KaMuCa 
+pushd KaMuCa
+git checkout 5652259bc6c66af7127d75d98ac90fd58871128e
+popd
+
 
 scram b -j 4
 

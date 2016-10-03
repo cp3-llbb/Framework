@@ -20,30 +20,22 @@ void MuonsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup
     for (auto muon: *muons) {
         if(applyRochester){
             float qter = 1.0;
-            TLorentzVector TLmu(muon.px(),muon.py(),muon.pz(),muon.energy());
-            if (event.isRealData())
-            {
+            TLorentzVector TLmu(muon.px(), muon.py(), muon.pz(), muon.energy());
+            if (event.isRealData()) {
                 rmcor->momcor_data(TLmu, muon.charge(), 0, qter);
             } else {
                 int ntrk = 0;
-                if (!muon.innerTrack().isNull())
-                {
+                if (!muon.innerTrack().isNull()) {
                     ntrk = muon.innerTrack()->hitPattern().trackerLayersWithMeasurement();
                 }
                 rmcor->momcor_mc(TLmu, muon.charge(), ntrk, qter);
             }
-            muon.setP4(math::XYZTLorentzVector(TLmu.Px(),TLmu.Py(),TLmu.Pz(),TLmu.E()));
+            muon.setP4(math::XYZTLorentzVector(TLmu.Px(), TLmu.Py(), TLmu.Pz(), TLmu.E()));
         }
-        if (applyKaMuCa)
-        {
-            TLorentzVector TLmu(muon.px(),muon.py(),muon.pz(),muon.energy());
-            double tmp_pt = muon.pt();
+        if (applyKaMuCa) {
             if (!event.isRealData())
-                tmp_pt = kamucacor->smear(muon.pt(), muon.eta());
-            double corr = kamucacor->getCorrectedPt(tmp_pt, muon.eta(), muon.phi(), muon.charge());
-            corr /= muon.pt();
-            TLmu = TLmu * corr;
-            muon.setP4(math::XYZTLorentzVector(TLmu.Px(),TLmu.Py(),TLmu.Pz(),TLmu.E()));
+                muon.setP4(muon.p4() * kamucacor->smear(muon.pt(), muon.eta()) / muon.pt());
+            muon.setP4(muon.p4() * kamucacor->getCorrectedPt(muon.pt(), muon.eta(), muon.phi(), muon.charge()) / muon.pt());
         }
         if (! pass_cut(muon))
             continue;
