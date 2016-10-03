@@ -1,5 +1,5 @@
 #define rochcor2016_cxx
-#include "rochcor2016.h"
+#include "cp3_llbb/Framework/interface/rochcor2016.h"
 #include "TLorentzVector.h"
 
 
@@ -222,10 +222,10 @@ RocRes muresol1;
 rochcor2016::~rochcor2016(){
 }
 
-rochcor2016::rochcor2016(){
+rochcor2016::rochcor2016(std::string rochesterInputFileName){
 
-  muresol1.init("./RoccoR_13tev.txt");
-  muresol1.dumpParams();
+  muresol1.init(rochesterInputFileName);
+//  muresol1.dumpParams();
   
   eran.SetSeed(123456);
   sran.SetSeed(1234);
@@ -244,10 +244,10 @@ rochcor2016::rochcor2016(){
 
 }
 
-rochcor2016::rochcor2016(int seed){
+rochcor2016::rochcor2016(int seed, std::string rochesterInputFileName){
 
-  muresol1.init("./RoccoR_13tev.txt");
-  muresol1.dumpParams();
+  muresol1.init(rochesterInputFileName);
+//  muresol1.dumpParams();
 
   eran.SetSeed(123456);
   sran.SetSeed(seed);
@@ -273,10 +273,10 @@ void rochcor2016::momcor_mc( TLorentzVector& mu, float charge, int ntrk, float& 
   double muphi = mu.Phi();
   double mueta = mu.Eta(); // same with mu.Eta() in Root
 
-  double px = mu.Px();
-  double py = mu.Py();
-  double pz = mu.Pz();
-  double e = mu.E();
+//  double px = mu.Px();
+//  double py = mu.Py();
+//  double pz = mu.Pz();
+//  double e = mu.E();
 
   int mu_phibin = phibin(muphi);
   int mu_etabin = etabin(mueta);
@@ -323,10 +323,10 @@ void rochcor2016::momcor_data( TLorentzVector& mu, float charge, int runopt, flo
   double muphi = mu.Phi();
   double mueta = mu.Eta(); // same with mu.Eta() in Root
   
-  double px = mu.Px();
-  double py = mu.Py();
-  double pz = mu.Pz();
-  double e = mu.E();
+//  double px = mu.Px();
+//  double py = mu.Py();
+//  double pz = mu.Pz();
+//  double e = mu.E();
   
   int mu_phibin = phibin(muphi);
   int mu_etabin = etabin(mueta);

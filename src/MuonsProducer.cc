@@ -21,7 +21,17 @@ void MuonsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup
         if(applyRochester){
             float qter = 1.0;
             TLorentzVector TLmu(muon.px(),muon.py(),muon.pz(),muon.energy());
-            (event.isRealData())?rmcor.momcor_data(TLmu, muon.charge(), 0, qter):rmcor.momcor_mc(TLmu, muon.charge(), 0, qter);
+            if (event.isRealData())
+            {
+                rmcor->momcor_data(TLmu, muon.charge(), 0, qter);
+            } else {
+                int ntrk = 0;
+                if (!muon.innerTrack().isNull())
+                {
+                    ntrk = muon.innerTrack()->hitPattern().trackerLayersWithMeasurement();
+                }
+                rmcor->momcor_mc(TLmu, muon.charge(), ntrk, qter);
+            }
             muon.setP4(math::XYZTLorentzVector(TLmu.Px(),TLmu.Py(),TLmu.Pz(),TLmu.E()));
         }
         if (! pass_cut(muon))

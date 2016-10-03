@@ -7,7 +7,7 @@
 #include <DataFormats/VertexReco/interface/Vertex.h>
 #include <DataFormats/PatCandidates/interface/Muon.h>
 
-#include <cp3_llbb/Framework/interface/rochcor2015.h>
+#include <cp3_llbb/Framework/interface/rochcor2016.h>
 
 #include <utility>
 
@@ -19,10 +19,19 @@ class MuonsProducer: public LeptonsProducer<pat::Muon>, public ScaleFactors {
             ScaleFactors::create_branches(config);
             if (config.exists("applyRochester")) {
                 applyRochester = config.getUntrackedParameter<bool>("applyRochester");
+                rochesterInputFile = config.getUntrackedParameter<edm::FileInPath>("rochesterInputFile");
+                if (applyRochester)
+                {
+                    std::cout << "  -> applying rochester muon momentum corrections, with input file " << rochesterInputFile.fullPath() << std::endl;
+                    rmcor = new rochcor2016(rochesterInputFile.fullPath());
+                }
             }
         }
 
-        virtual ~MuonsProducer() {}
+        virtual ~MuonsProducer()
+        {
+            delete rmcor;
+        }
 
         virtual void doConsumes(const edm::ParameterSet& config, edm::ConsumesCollector&& collector) override {
             LeptonsProducer::doConsumes(config, std::forward<edm::ConsumesCollector>(collector));
@@ -36,6 +45,7 @@ class MuonsProducer: public LeptonsProducer<pat::Muon>, public ScaleFactors {
         // Tokens
         edm::EDGetTokenT<std::vector<reco::Vertex>> m_vertices_token;
         bool applyRochester = false ;
+        edm::FileInPath rochesterInputFile;
     public:
         // Tree members
         std::vector<bool>& isLoose = tree["isLoose"].write<std::vector<bool>>();
@@ -47,7 +57,7 @@ class MuonsProducer: public LeptonsProducer<pat::Muon>, public ScaleFactors {
         BRANCH(dxy, std::vector<float>);
         BRANCH(dz, std::vector<float>);
         BRANCH(dca, std::vector<float>);
-        rochcor2015 rmcor;
+        rochcor2016 *rmcor;
 };
 
 #endif

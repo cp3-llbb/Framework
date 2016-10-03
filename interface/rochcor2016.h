@@ -17,8 +17,8 @@
 
 class rochcor2016 {
  public:
-  rochcor2016();
-  rochcor2016(int seed);
+  rochcor2016(std::string rochesterInputFileName);
+  rochcor2016(int seed, std::string rochesterInputFileName);
   ~rochcor2016();
   
   void momcor_mc(TLorentzVector&, float, int, float&);
