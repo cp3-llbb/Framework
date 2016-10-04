@@ -5,6 +5,7 @@ default_configuration = cms.PSet(
         prefix = cms.string('hlt_'),
         enable = cms.bool(True),
         parameters = cms.PSet(
+            hlt = cms.untracked.InputTag('TriggerResults', '', 'HLT'),
             triggers = cms.untracked.FileInPath('cp3_llbb/Framework/data/triggers.xml')
             )
         )

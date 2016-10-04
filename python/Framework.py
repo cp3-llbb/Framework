@@ -22,6 +22,7 @@ class Framework(object):
         self.__miniaod_gen_jet_collection = 'slimmedGenJets'
         self.__miniaod_met_collection = 'slimmedMETs'
 
+        self.hltProcessName = kwargs['hltProcessName'] if 'hltProcessName' in kwargs else 'HLT'
         self.isData = isData
         self.era = era
         self.processName = kwargs['processName'] if 'processName' in kwargs else 'PAT'
@@ -96,6 +97,12 @@ class Framework(object):
                 print("")
                 print("Changing process name from %r to %r..." % ('PAT', self.processName))
             change_process_name(self.process.framework, 'PAT', self.processName)
+
+        if self.hltProcessName is not None and self.hltProcessName != 'HLT':
+            if self.verbose:
+                print("")
+                print("Changing hlt process name from %r to %r..." % ('HLT', self.hltProcessName))
+            change_process_name(self.process.framework, 'HLT', self.hltProcessName)
 
         if len(self.__systematics) > 0:
             if self.verbose:
@@ -390,13 +397,19 @@ class Framework(object):
 
         parseCommandLine = False
         for argv in sys.argv:
-            if 'runOnData' in argv or 'globalTag' in argv or 'era' in argv or 'process' in argv:
+            if 'hltProcessName' in argv or 'runOnData' in argv or 'globalTag' in argv or 'era' in argv or 'process' in argv:
                 parseCommandLine = True
                 break
 
         if parseCommandLine:
             from FWCore.ParameterSet.VarParsing import VarParsing
             options = VarParsing()
+            options.register('hltProcessName',
+                    '',
+                    VarParsing.multiplicity.singleton,
+                    VarParsing.varType.string,
+                    'The HLT processName to use')
+
             options.register('runOnData',
                     -1,
                     VarParsing.multiplicity.singleton,
@@ -422,6 +435,9 @@ class Framework(object):
                     'Process name of the MiniAOD production.')
 
             options.parseArguments()
+
+            if options.hltProcessName:
+                self.hltProcessName = options.hltProcessName
 
             if options.runOnData != -1:
                 runOnData = options.runOnData == 1
