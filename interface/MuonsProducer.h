@@ -70,8 +70,7 @@ class MuonsProducer: public LeptonsProducer<pat::Muon>, public ScaleFactors {
         BRANCH(dca, std::vector<float>);
         std::unique_ptr<rochcor2016> rmcor;
         std::unique_ptr<KalmanMuonCalibrator> kamucacor;
-        BRANCH(rochester_correction, std::vector<float>);
-        BRANCH(kamuca_correction, std::vector<float>);
+        BRANCH(scale_correction_factor, std::vector<float>);
 };
 
 #endif

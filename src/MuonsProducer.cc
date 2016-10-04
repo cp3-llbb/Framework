@@ -18,10 +18,9 @@ void MuonsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup
     double rho = *rho_handle;
 
     for (auto muon: *muons) {
-        float rochester_corr_ = 1.0;
-        float kamuca_corr_ = 1.0;
+        float scale_correction_factor_ = 1.0;
         if(applyRochester){
-            rochester_corr_ /= muon.pt();
+            scale_correction_factor_ /= muon.pt();
             float qter = 1.0;
             TLorentzVector TLmu(muon.px(), muon.py(), muon.pz(), muon.energy());
             if (event.isRealData()) {
@@ -34,14 +33,14 @@ void MuonsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup
                 rmcor->momcor_mc(TLmu, muon.charge(), ntrk, qter);
             }
             muon.setP4(math::XYZTLorentzVector(TLmu.Px(), TLmu.Py(), TLmu.Pz(), TLmu.E()));
-            rochester_corr_ *= muon.pt();
+            scale_correction_factor_ *= muon.pt();
         }
         if (applyKaMuCa) {
-            kamuca_corr_ /= muon.pt();
+            scale_correction_factor_ /= muon.pt();
             muon.setP4(muon.p4() * kamucacor->getCorrectedPt(muon.pt(), muon.eta(), muon.phi(), muon.charge()) / muon.pt());
             if (!event.isRealData())
                 muon.setP4(muon.p4() * kamucacor->smear(muon.pt(), muon.eta()) / muon.pt());
-            kamuca_corr_ *= muon.pt();
+            scale_correction_factor_ *= muon.pt();
         }
         if (! pass_cut(muon))
             continue;
@@ -63,8 +62,7 @@ void MuonsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup
         dxy.push_back(muon.muonBestTrack()->dxy(primary_vertex.position()));
         dz.push_back(muon.muonBestTrack()->dz(primary_vertex.position()));
         dca.push_back(muon.dB(pat::Muon::PV3D)/muon.edB(pat::Muon::PV3D));
-        rochester_correction.push_back(rochester_corr_);
-        kamuca_correction.push_back(kamuca_corr_);
+        scale_correction_factor.push_back(scale_correction_factor_);
 
         Parameters p {{BinningVariable::Eta, muon.eta()}, {BinningVariable::Pt, muon.pt()}};
         ScaleFactors::store_scale_factors(p, event.isRealData());
