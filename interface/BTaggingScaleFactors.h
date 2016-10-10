@@ -14,6 +14,7 @@
 
 #include <boost/property_tree/ptree.hpp>
 
+#include <array>
 #include <memory>
 #include <tuple>
 
@@ -30,11 +31,18 @@ enum class Flavor {
     LIGHT = 2
 };
 
+enum class SystFlavor {
+    HEAVY = 1,
+    LIGHT = 2
+};
+
 class BTaggingScaleFactors {
 
     public:
-        typedef std::tuple<Algorithm, std::string> branch_key_type;
+        typedef std::tuple<Algorithm, SystFlavor, std::string> branch_key_type;
         typedef std::tuple<Algorithm, Flavor, std::string> sf_key_type;
+
+        static std::array<SystFlavor, 2> SystFlavors;
 
         BTaggingScaleFactors(ROOT::TreeGroup& tree):
             m_tree(tree) {
@@ -45,11 +53,12 @@ class BTaggingScaleFactors {
 
         virtual void store_scale_factors(Algorithm algo, Flavor flavor, const Parameters&, bool isData) final;
 
-        virtual float get_scale_factor(Algorithm algo, const std::string& wp, size_t index, Variation variation = Variation::Nominal) final;
-
         virtual bool has_scale_factors(Algorithm algo) final {
             return m_algos.count(algo) != 0;
         }
+
+    protected:
+        virtual float get_scale_factor(Algorithm algo, Flavor flavor, const std::string& wp, size_t index, Variation variation = Variation::Nominal) final;
 
     private:
         ROOT::TreeGroup& m_tree;
@@ -102,6 +111,31 @@ class BTaggingScaleFactors {
             }
 
             throw edm::Exception(edm::errors::NotFound, "Unsupported flavor");
+        }
+
+        static inline SystFlavor flavor_to_syst_flavor(Flavor flavor) {
+            switch (flavor) {
+                case Flavor::B:
+                case Flavor::C:
+                    return SystFlavor::HEAVY;
+
+                case Flavor::LIGHT:
+                    return SystFlavor::LIGHT;
+            }
+
+            throw edm::Exception(edm::errors::NotFound, "Unsupported flavor");
+        }
+
+        static inline std::string syst_flavor_to_string(SystFlavor flavor) {
+            switch (flavor) {
+                case SystFlavor::HEAVY:
+                    return "heavyjet";
+
+                case SystFlavor::LIGHT:
+                    return "lightjet";
+            }
+
+            throw edm::Exception(edm::errors::NotFound, "Unsupported syst flavor");
         }
 
         static inline Flavor string_to_flavor(const std::string& flavor) {

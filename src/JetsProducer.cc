@@ -15,10 +15,14 @@ void JetsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup)
             continue;
         fill_candidate(jet, jet.genJet());
 
+        Flavor jet_flavor = get_flavor(jet.hadronFlavour());
+
         jecFactor.push_back(jet.jecFactor(0));
         area.push_back(jet.jetArea());
         partonFlavor.push_back(jet.partonFlavour());
         hadronFlavor.push_back(jet.hadronFlavour());
+        systFlavor.push_back(static_cast<int8_t>(BTaggingScaleFactors::flavor_to_syst_flavor(jet_flavor)));
+
         if (computeRegression) {
             // Variables needed for 80X b-jet energy regression as of September 29th 2016
             float nPVs_ = 0.;
@@ -114,8 +118,15 @@ void JetsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup)
 
             Algorithm algo = string_to_algorithm(it.first);
             if (algo != Algorithm::UNKNOWN && BTaggingScaleFactors::has_scale_factors(algo)) {
-                BTaggingScaleFactors::store_scale_factors(algo, get_flavor(jet.hadronFlavour()), p, event.isRealData());
+                BTaggingScaleFactors::store_scale_factors(algo, jet_flavor, p, event.isRealData());
             }
         }
     }
+}
+
+float JetsProducer::get_scale_factor(Algorithm algo, const std::string& wp, size_t index, Variation variation/* = Variation::Nominal*/) {
+
+    auto flavor = BTaggingScaleFactors::get_flavor(hadronFlavor[index]);
+
+    return BTaggingScaleFactors::get_scale_factor(algo, flavor, wp, index, variation);
 }

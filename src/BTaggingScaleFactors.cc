@@ -5,6 +5,8 @@
 
 //#define SF_DEBUG
 
+std::array<SystFlavor, 2> BTaggingScaleFactors::SystFlavors = {{SystFlavor::HEAVY, SystFlavor::LIGHT}};
+
 void BTaggingScaleFactors::create_branches(const edm::ParameterSet& config) {
 
     if (config.existsAs<edm::ParameterSet>("scale_factors", false)) {
@@ -33,9 +35,11 @@ void BTaggingScaleFactors::create_branches(const edm::ParameterSet& config) {
 
             std::vector<edm::ParameterSet> files = scale_factor_set.getUntrackedParameter<std::vector<edm::ParameterSet>>("files");
 
-            std::string branch_name = "sf_" + algo_str + "_" + wp;
-            branch_key_type branch_key = std::make_tuple(algo, wp);
-            m_branches.emplace(branch_key, & m_tree[branch_name].write<std::vector<std::vector<float>>>());
+            for (auto syst_flavor: SystFlavors) {
+                std::string branch_name = "sf_" + algo_str + "_" + syst_flavor_to_string(syst_flavor) + "_" + wp;
+                branch_key_type branch_key = std::make_tuple(algo, syst_flavor, wp);
+                m_branches.emplace(branch_key, & m_tree[branch_name].write<std::vector<std::vector<float>>>());
+            }
 
             for (auto& file_set: files) {
                 std::string file = file_set.getUntrackedParameter<edm::FileInPath>("file").fullPath();
@@ -64,20 +68,24 @@ void BTaggingScaleFactors::store_scale_factors(Algorithm algo_, Flavor flavor, c
     if (algo_it == m_algos.end())
         throw edm::Exception(edm::errors::NotFound, "No scale factors for this algorithm. Please check your python configuration.");
 
+    SystFlavor jet_syst_flavor = flavor_to_syst_flavor(flavor);
     for (const auto& wp: algo_it->second) {
         sf_key_type sf_key = std::make_tuple(algo_, flavor, wp);
-        branch_key_type branch_key = std::make_tuple(algo_, wp);
+        for (auto syst_flavor: SystFlavors) {
+            branch_key_type branch_key = std::make_tuple(algo_, syst_flavor, wp);
 
-        if (isData)
-            (*m_branches[branch_key]).push_back({1., 0., 0.});
-        else
-            (*m_branches[branch_key]).push_back(m_scale_factors[sf_key].get(parameters));
+            // Store a dummy SF for data or if the jet flavor is not the right one
+            if (isData || syst_flavor != jet_syst_flavor)
+                (*m_branches[branch_key]).push_back({1., 0., 0.});
+            else
+                (*m_branches[branch_key]).push_back(m_scale_factors[sf_key].get(parameters));
+        }
     }
 }
 
-float BTaggingScaleFactors::get_scale_factor(Algorithm algo, const std::string& wp, size_t index, Variation variation/* = Variation::Nominal*/) {
+float BTaggingScaleFactors::get_scale_factor(Algorithm algo, Flavor flavor, const std::string& wp, size_t index, Variation variation/* = Variation::Nominal*/) {
 
-    branch_key_type key = std::make_tuple(algo, wp);
+    branch_key_type key = std::make_tuple(algo, flavor_to_syst_flavor(flavor), wp);
     auto sf = m_branches.find(key);
 
     if (sf == m_branches.end())

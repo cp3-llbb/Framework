@@ -66,6 +66,8 @@ class JetsProducer: public CandidatesProducer<pat::Jet>, public BTaggingScaleFac
             return m_btag_discriminators.at(name)->at(index);
         }
 
+        float get_scale_factor(Algorithm algo, const std::string& wp, size_t index, Variation variation = Variation::Nominal);
+
     private:
 
         // Tokens
@@ -97,6 +99,10 @@ class JetsProducer: public CandidatesProducer<pat::Jet>, public BTaggingScaleFac
         std::vector<float>& area = tree["area"].write<std::vector<float>>();
         std::vector<int8_t>& partonFlavor = tree["partonFlavor"].write<std::vector<int8_t>>();
         std::vector<int8_t>& hadronFlavor = tree["hadronFlavor"].write<std::vector<int8_t>>();
+
+        // Systematics flavor: 1 for heavy jets, 2 for light jets
+        std::vector<int8_t>& systFlavor = tree["systFlavor"].write<std::vector<int8_t>>();
+
         std::vector<float>& jecFactor = tree["jecFactor"].write<std::vector<float>>();
         std::vector<float>& puJetID = tree["puJetID"].write<std::vector<float>>();
         // Variables needed for 74X b-jet energy regression as of January 26th 2016
