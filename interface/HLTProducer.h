@@ -48,6 +48,7 @@ class HLTProducer: public Framework::Producer {
         std::vector<uint16_t>& prescales = tree["prescales"].write<std::vector<uint16_t>>();
 
         BRANCH(object_paths, std::vector<std::vector<std::string>>);
+        TRANSIENT_BRANCH(object_filters, std::vector<std::vector<std::string>>);
         BRANCH(object_p4, std::vector<LorentzVector>);
         BRANCH(object_pdg_id, std::vector<int>);
 };

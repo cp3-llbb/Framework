@@ -83,6 +83,7 @@ void HLTProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup) 
             std::set_intersection(paths.begin(), paths.end(), object_paths_.begin(), object_paths_.end(), std::back_inserter(filtered_paths));
 
             object_paths.push_back(filtered_paths);
+            object_filters.push_back(obj.filterLabels());
             object_p4.push_back(LorentzVector(obj.pt(), obj.eta(), obj.phi(), obj.energy()));
             object_pdg_id.push_back(obj.pdgId());
         }
