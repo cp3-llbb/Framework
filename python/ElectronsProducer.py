@@ -22,16 +22,7 @@ default_configuration = cms.PSet(
 
                 gsf_tracking = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/Electron_EGamma_SF2D_gsfTracking.json'),
 
-                hww_wp = cms.untracked.VPSet(
-                    cms.untracked.PSet(
-                        file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/Electron_Tight_Run2016_lt273726_HWW.json'),
-                        weight = cms.untracked.double(527.324)
-                    ),
-                    cms.untracked.PSet(
-                        file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/Electron_Tight_Run2016_gt273726_HWW.json'),
-                        weight = cms.untracked.double(12364.204)
-                    )
-                ),
+                hww_wp = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/Electron_Tight_Run2016_Run273726to276811_HWW_weighted.json')
                 )
             ),
         )

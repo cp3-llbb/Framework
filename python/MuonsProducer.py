@@ -26,34 +26,9 @@ default_configuration = cms.PSet(
                 iso_loosetk_id_tight = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/Muon_LooseRelTkIso_TightID_iso.json'),
                 iso_tight_id_tight = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/Muon_TightRelIso_TightID_iso.json'),
 
-                id_tight_hww = cms.untracked.VPSet(
-                    cms.untracked.PSet(
-                        file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/Muon_data_mc_TightID_Run2016_Run271036to275783_PTvsETA_HWW.json'),
-                        weight = cms.untracked.double(6274.191)
-                    ),
-                    cms.untracked.PSet(
-                        file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/Muon_data_mc_TightID_Run2016_Run275784to276500_PTvsETA_HWW.json'),
-                        weight = cms.untracked.double(3426.131)
-                    ),
-                    cms.untracked.PSet(
-                        file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/Muon_data_mc_TightID_Run2016_Run276501to276811_PTvsETA_HWW.json'),
-                        weight = cms.untracked.double(3191.207)
-                    )
-                ),
-                iso_tight_hww = cms.untracked.VPSet(
-                    cms.untracked.PSet(
-                        file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/Muon_data_mc_ISOTight_Run2016_Run271036to275783_PTvsETA_HWW.json'),
-                        weight = cms.untracked.double(6274.191)
-                    ),
-                    cms.untracked.PSet(
-                        file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/Muon_data_mc_ISOTight_Run2016_Run275784to276500_PTvsETA_HWW.json'),
-                        weight = cms.untracked.double(3426.131)
-                    ),
-                    cms.untracked.PSet(
-                        file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/Muon_data_mc_ISOTight_Run2016_Run276501to276811_PTvsETA_HWW.json'),
-                        weight = cms.untracked.double(3191.207)
-                    )
-                )
+                id_tight_hww = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/Muon_data_mc_TightID_Run2016_Run271036to276811_PTvsETA_HWW_weighted.json'),
+                iso_tight_hww = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/Muon_data_mc_ISOTight_Run2016_Run271036to276811_PTvsETA_HWW_weighted.json'),
+
                 )
             )
         )
