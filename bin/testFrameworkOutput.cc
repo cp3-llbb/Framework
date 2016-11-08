@@ -115,6 +115,42 @@ TEST_CASE("Check if trees are equals", "[diff]") {
     test_tree->SetBranchStatus("*", 1);
 
     size_t n_branches = ref_tree->GetNbranches();
+    if ((size_t) test_tree->GetNbranches() != n_branches) {
+        std::vector<std::string> ref_branches;
+        TObjArray* branches = ref_tree->GetListOfBranches();
+        TIter next(branches);
+        TBranch* branch;
+        while ((branch = (TBranch*) next())) {
+            ref_branches.push_back(branch->GetName());
+        }
+
+        std::vector<std::string> test_branches;
+        branches = test_tree->GetListOfBranches();
+        next = TIter(branches);
+        while ((branch = (TBranch*) next())) {
+            test_branches.push_back(branch->GetName());
+        }
+
+        std::vector<std::string> diff;
+        std::set_difference(ref_branches.begin(), ref_branches.end(),
+                test_branches.begin(), test_branches.end(),
+                std::back_inserter(diff));
+
+        std::cout << "Branches found in reference tree but not in output tree:" << std::endl;
+        for (const auto& b: diff) {
+            std::cout << "  " << b << std::endl;
+        }
+
+        diff.clear();
+        std::set_difference(test_branches.begin(), test_branches.end(),
+                ref_branches.begin(), ref_branches.end(),
+                std::back_inserter(diff));
+
+        std::cout << std::endl << "Branches found in output tree but not in the reference tree:" << std::endl;
+        for (const auto& b: diff) {
+            std::cout << "  " << b << std::endl;
+        }
+    }
     REQUIRE(test_tree->GetNbranches() == n_branches);
 
     size_t entries = ref_tree->GetEntries();
