@@ -84,8 +84,9 @@ class Parameters {
         value_type m_values;
 };
 
-struct BinnedValues {
+class BinnedValues {
 
+    public:
     typedef bimap<BinningVariable, std::string> mapping_bimap;
     static const mapping_bimap variable_to_string_mapping;
 
@@ -200,7 +201,7 @@ struct BinnedValues {
     }
 
     public:
-    std::vector<float> get(const Parameters& parameters) const {
+    virtual std::vector<float> get(const Parameters& parameters) const {
         static auto double_errors = [](std::vector<float>& values) {
             values[Up] *= 2;
             values[Down] *= 2;
