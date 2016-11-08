@@ -1,5 +1,6 @@
 #include <cp3_llbb/Framework/interface/ScaleFactors.h>
 #include <cp3_llbb/Framework/interface/BinnedValuesJSONParser.h>
+#include <cp3_llbb/Framework/interface/WeightedBinnedValues.h>
 
 #include <iostream>
 
@@ -12,9 +13,20 @@ void ScaleFactors::create_branches(const edm::ParameterSet& config) {
         for (const std::string& scale_factor: scale_factors_name) {
             create_branch(scale_factor, "sf_" + scale_factor);
 
-            BinnedValuesJSONParser parser(scale_factors.getUntrackedParameter<edm::FileInPath>(scale_factor).fullPath());
+            std::cout << "    Registering new scale-factor: " << scale_factor;
+            // The value can be either a FileInPath for a standard JSON file, or a vector
+            // of ParameterSet for weighted values
+            if (scale_factors.existsAs<edm::FileInPath>(scale_factor, false)) {
 
-            m_scale_factors.emplace(scale_factor, std::move(parser.get_values()));
+                BinnedValuesJSONParser parser(scale_factors.getUntrackedParameter<edm::FileInPath>(scale_factor).fullPath());
+                m_scale_factors.emplace(scale_factor, std::unique_ptr<BinnedValues>(new BinnedValues(std::move(parser.get_values()))));
+                std::cout << " -> non-weighted." << std::endl;
+            } else {
+                const auto& parts = scale_factors.getUntrackedParameter<std::vector<edm::ParameterSet>>(scale_factor);
+                std::unique_ptr<BinnedValues> values(new WeightedBinnedValues(parts));
+                m_scale_factors.emplace(scale_factor, std::move(values));
+                std::cout << " -> weighted (" << parts.size() << " components)." << std::endl;
+            }
         }
     }
 
@@ -31,7 +43,7 @@ void ScaleFactors::store_scale_factors(const Parameters& parameters, bool isData
         if (isData)
             (*m_branches[sf.first]).push_back({1., 0., 0.});
         else
-            (*m_branches[sf.first]).push_back(sf.second.get(parameters));
+            (*m_branches[sf.first]).push_back(sf.second->get(parameters));
     }
 }
 

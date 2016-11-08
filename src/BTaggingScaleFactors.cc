@@ -1,5 +1,6 @@
 #include <cp3_llbb/Framework/interface/BTaggingScaleFactors.h>
 #include <cp3_llbb/Framework/interface/BinnedValuesJSONParser.h>
+#include <cp3_llbb/Framework/interface/WeightedBinnedValues.h>
 
 #include <iostream>
 
@@ -42,17 +43,26 @@ void BTaggingScaleFactors::create_branches(const edm::ParameterSet& config) {
             }
 
             for (auto& file_set: files) {
-                std::string file = file_set.getUntrackedParameter<edm::FileInPath>("file").fullPath();
                 std::string flavor = file_set.getUntrackedParameter<std::string>("flavor");
 
-#ifdef SF_DEBUG
-                std::cout << "\tAdding scale factor for algo: " << algo_str << "  wp: " << wp << "  flavor: " << flavor << " from file '" << file << "'" << std::endl;
-#endif
+                std::cout << "    Registering new scale-factor for algo: " << algo_str << "  wp: " << wp << "  flavor: " << flavor;
 
                 sf_key_type sf_key = std::make_tuple(algo, string_to_flavor(flavor), wp);
 
-                BinnedValuesJSONParser parser(file);
-                m_scale_factors.emplace(sf_key, std::move(parser.get_values()));
+                // The value can be either a FileInPath for a standard JSON file, or a vector
+                // of ParameterSet for weighted values
+                if (file_set.existsAs<edm::FileInPath>("file", false)) {
+                    std::string file = file_set.getUntrackedParameter<edm::FileInPath>("file").fullPath();
+                    std::cout << " -> non-weighted." << std::endl;
+
+                    BinnedValuesJSONParser parser(file);
+                    m_scale_factors.emplace(sf_key, std::unique_ptr<BinnedValues>(new BinnedValues(std::move(parser.get_values()))));
+                } else {
+                    const auto& parts = file_set.getUntrackedParameter<std::vector<edm::ParameterSet>>("file");
+                    std::unique_ptr<BinnedValues> values(new WeightedBinnedValues(parts));
+                    m_scale_factors.emplace(sf_key, std::move(values));
+                    std::cout << " -> weighted (" << parts.size() << " components)." << std::endl;
+                }
             }
         }
 #ifdef SF_DEBUG
@@ -78,7 +88,7 @@ void BTaggingScaleFactors::store_scale_factors(Algorithm algo_, Flavor flavor, c
             if (isData || syst_flavor != jet_syst_flavor)
                 (*m_branches[branch_key]).push_back({1., 0., 0.});
             else
-                (*m_branches[branch_key]).push_back(m_scale_factors[sf_key].get(parameters));
+                (*m_branches[branch_key]).push_back(m_scale_factors.at(sf_key)->get(parameters));
         }
     }
 }

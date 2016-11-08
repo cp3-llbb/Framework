@@ -64,7 +64,7 @@ class BTaggingScaleFactors {
         ROOT::TreeGroup& m_tree;
 
         std::map<branch_key_type, std::vector<std::vector<float>>*> m_branches;
-        std::map<sf_key_type, BinnedValues> m_scale_factors;
+        std::map<sf_key_type, std::unique_ptr<BinnedValues>> m_scale_factors;
 
         std::map<Algorithm, std::vector<std::string>> m_algos;
 

@@ -34,5 +34,5 @@ class ScaleFactors {
         ROOT::TreeGroup& m_tree;
 
         std::map<std::string, std::vector<std::vector<float>>*> m_branches;
-        std::map<std::string, BinnedValues> m_scale_factors;
+        std::map<std::string, std::unique_ptr<BinnedValues>> m_scale_factors;
 };
