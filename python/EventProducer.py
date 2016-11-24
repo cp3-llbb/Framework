@@ -9,13 +9,13 @@ default_configuration = cms.PSet(
             compute_pu_weights = cms.untracked.bool(True),
             pu_profile = cms.untracked.string("Spring16_25ns"),
             pu_reweighter = cms.PSet(
-                    data_pu_profile = cms.untracked.FileInPath('cp3_llbb/Framework/data/PUProfiles/pu_histogram_2016_271036-280385_69200minbias.root'),
+                    data_pu_profile = cms.untracked.FileInPath('cp3_llbb/Framework/data/PUProfiles/pu_histogram_2016_271036-284044_ReReco_69200minbias.root'),
                 ),
             pu_reweighter_up = cms.PSet(
-                    data_pu_profile = cms.untracked.FileInPath('cp3_llbb/Framework/data/PUProfiles/pu_histogram_2016_271036-280385_72660minbias.root')
+                    data_pu_profile = cms.untracked.FileInPath('cp3_llbb/Framework/data/PUProfiles/pu_histogram_2016_271036-284044_ReReco_72660minbias.root')
                 ),
             pu_reweighter_down = cms.PSet(
-                    data_pu_profile = cms.untracked.FileInPath('cp3_llbb/Framework/data/PUProfiles/pu_histogram_2016_271036-280385_65740minbias.root')
+                    data_pu_profile = cms.untracked.FileInPath('cp3_llbb/Framework/data/PUProfiles/pu_histogram_2016_271036-284044_ReReco_65740minbias.root')
                 )
             )
         )
