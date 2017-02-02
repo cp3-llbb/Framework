@@ -38,7 +38,8 @@ git checkout 2ad38daae37a41a9c07f482e95f2455e3eb915b0
 popd
 
 # Electron regression
-git cms-merge-topic rafaellopesdesa:Regression80XEgammaAnalysis
+# https://twiki.cern.ch/twiki/bin/view/CMS/EGMRegression
+git cms-merge-topic rafaellopesdesa:Regression80XEgammaAnalysis_v2
 
 # Fake-muon filter
 git cms-merge-topic gpetruc:badMuonFilters_80X_v2

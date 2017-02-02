@@ -4,7 +4,7 @@
 # Current working dir is $CMSSW_BASE/src
 
 git cms-merge-topic ikrav:egm_id_80X_v2
-git cms-merge-topic rafaellopesdesa:Regression80XEgammaAnalysis
+git cms-merge-topic rafaellopesdesa:Regression80XEgammaAnalysis_v2
 git cms-merge-topic gpetruc:badMuonFilters_80X_v2
 
 git clone -o upstream https://github.com/bachtis/analysis.git -b KaMuCa_V4 KaMuCa 
