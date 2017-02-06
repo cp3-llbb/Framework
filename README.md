@@ -47,10 +47,6 @@ git cms-merge-topic shervin86:Moriond2017_JEC_energyScales
 # https://twiki.cern.ch/twiki/bin/view/CMS/EGMRegression
 git cms-merge-topic rafaellopesdesa:Regression80XEgammaAnalysis_v2
 
-pushd EgammaAnalysis/ElectronTools/data
-git clone https://github.com/ECALELFS/ScalesSmearings.git
-popd
-
 scram b -j 4
 
 # Add the area containing the MVA weights (from cms-data, to appear in “external”).
