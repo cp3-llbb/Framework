@@ -502,7 +502,7 @@ class Framework(object):
         self.process.slimmedElectronsSmeared = calibratedPatElectrons.clone(
                 electrons = "selectedElectrons",
                 isMC = not self.isData,
-                correctionFile = files['Moriond2017_JEC']
+                correctionFile = files['80Xapproval']
                 )
 
         self.process.load('Configuration.StandardSequences.Services_cff')
