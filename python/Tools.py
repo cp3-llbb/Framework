@@ -183,44 +183,9 @@ def recorrect_met(process, isData, metCollection, jetCollection):
                 metSource = cms.InputTag(metCollection, '', '@skipCurrentProcess')
                 ))
 
-    # Raw MET
-    uncorrectedMetTag = 'uncorrectedMet%s' % metCollection
-    setattr(process, uncorrectedMetTag, cms.EDProducer('RecoMETExtractor',
-            correctionLevel = cms.string('raw'),
-            metSource = cms.InputTag(metCollection, '', '@skipCurrentProcess')
-            ))
-
-    # Raw PAT MET
-    from PhysicsTools.PatAlgos.tools.metTools import addMETCollection
-    uncorrectedPatMetTag = 'uncorrectedPatMet%s' % metCollection
-    addMETCollection(process, labelName=uncorrectedPatMetTag, metSource=uncorrectedMetTag)
-    uncorrectedPatMet = getattr(process, uncorrectedPatMetTag)
-    if isData:
-        uncorrectedPatMet.addGenMET = False
-    else:
-        uncorrectedPatMet.genMETSource = cms.InputTag(genMetTag)
-
-    # Type-1 correction
-    type1CorrForNewJecTag = 'type1CorrForNewJEC%s' % metCollection
-    setattr(process, type1CorrForNewJecTag, cms.EDProducer('PATPFJetMETcorrInputProducer',
-            jetCorrLabel = cms.InputTag('L3Absolute'),
-            jetCorrLabelRes = cms.InputTag('L2L3Residual'),
-            offsetCorrLabel = cms.InputTag('L1FastJet'),
-            skipEM = cms.bool(True),
-            skipEMfractionThreshold = cms.double(0.9),
-            skipMuonSelection = cms.string('isGlobalMuon | isStandAloneMuon'),
-            skipMuons = cms.bool(True),
-            src = cms.InputTag(jetCollection),
-            type1JetPtThreshold = cms.double(15.0),
-            ))
-
-    slimmedMETsTag = '%sNewJEC' % metCollection
-    setattr(process, slimmedMETsTag, cms.EDProducer('CorrectedPATMETProducer',
-            src = cms.InputTag(uncorrectedPatMetTag),
-            srcCorrections = cms.VInputTag(cms.InputTag(type1CorrForNewJecTag, 'type1'))
-            ))
-
-    return (slimmedMETsTag)
+    from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
+    runMetCorAndUncFromMiniAOD(process, isData=isData, jetCollUnskimmed=jetCollection, postfix="NewJEC")
+    return 'slimmedMETsNewJEC'
 
 def check_tag_(db_file, tag):
     import sqlite3
