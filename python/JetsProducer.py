@@ -121,6 +121,60 @@ default_configuration = cms.PSet(
                             file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_tight_lightjets_incl_cmvav2_BtoH_moriond17.json'),
                             ),
                         )
+                    ),
+                deepCSV_loose = cms.untracked.PSet(
+                    algorithm = cms.untracked.string('deepCSV'),
+                    working_point = cms.untracked.string('loose'),
+                    files = cms.untracked.VPSet(
+                        cms.untracked.PSet(
+                            flavor = cms.untracked.string('bjets'),
+                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_loose_bjets_comb_deepCSV_BtoH_moriond17.json'),
+                            ),
+                        cms.untracked.PSet(
+                            flavor = cms.untracked.string('cjets'),
+                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_loose_cjets_comb_deepCSV_BtoH_moriond17.json'),
+                            ),
+                        cms.untracked.PSet(
+                            flavor = cms.untracked.string('lightjets'),
+                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_loose_lightjets_incl_deepCSV_BtoH_moriond17.json'),
+                            ),
+                        )
+                    ),
+                deepCSV_medium = cms.untracked.PSet(
+                    algorithm = cms.untracked.string('deepCSV'),
+                    working_point = cms.untracked.string('medium'),
+                    files = cms.untracked.VPSet(
+                        cms.untracked.PSet(
+                            flavor = cms.untracked.string('bjets'),
+                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_medium_bjets_comb_deepCSV_BtoH_moriond17.json'),
+                            ),
+                        cms.untracked.PSet(
+                            flavor = cms.untracked.string('cjets'),
+                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_medium_cjets_comb_deepCSV_BtoH_moriond17.json'),
+                            ),
+                        cms.untracked.PSet(
+                            flavor = cms.untracked.string('lightjets'),
+                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_medium_lightjets_incl_deepCSV_BtoH_moriond17.json'),
+                            ),
+                        )
+                    ),
+                deepCSV_tight = cms.untracked.PSet(
+                    algorithm = cms.untracked.string('deepCSV'),
+                    working_point = cms.untracked.string('tight'),
+                    files = cms.untracked.VPSet(
+                        cms.untracked.PSet(
+                            flavor = cms.untracked.string('bjets'),
+                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_tight_bjets_comb_deepCSV_BtoH_moriond17.json'),
+                            ),
+                        cms.untracked.PSet(
+                            flavor = cms.untracked.string('cjets'),
+                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_tight_cjets_comb_deepCSV_BtoH_moriond17.json'),
+                            ),
+                        cms.untracked.PSet(
+                            flavor = cms.untracked.string('lightjets'),
+                            file = cms.untracked.FileInPath('cp3_llbb/Framework/data/ScaleFactors/BTagging_tight_lightjets_incl_deepCSV_BtoH_moriond17.json'),
+                            ),
+                        )
                     )
                 ),
                 computeRegression = cms.untracked.bool(False),

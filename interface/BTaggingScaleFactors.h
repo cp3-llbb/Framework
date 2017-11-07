@@ -18,7 +18,8 @@ enum class Algorithm {
     CSV = 0,
     CSVv2,
     JP,
-    cMVAv2
+    cMVAv2,
+    DeepCSV
 };
 
 enum class Flavor {
@@ -78,6 +79,9 @@ class BTaggingScaleFactors {
 
                 case Algorithm::cMVAv2:
                     return "cmvav2";
+                
+                case Algorithm::DeepCSV:
+                    return "deepCSV";
 
                 default:
                     return "unknown";
@@ -97,6 +101,9 @@ class BTaggingScaleFactors {
             if ((algo == "cmvav2") || (algo == "pfCombinedMVAV2BJetTags"))
                 return Algorithm::cMVAv2;
 
+            if ((algo == "deepCSV") || (algo == "pfDeepCSVJetTags:probb") || (algo == "pfDeepCSVJetTags:probbb"))
+                return Algorithm::DeepCSV;
+            
             return Algorithm::UNKNOWN;
         }
 
