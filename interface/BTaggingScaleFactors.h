@@ -101,7 +101,7 @@ class BTaggingScaleFactors {
             if ((algo == "cmvav2") || (algo == "pfCombinedMVAV2BJetTags"))
                 return Algorithm::cMVAv2;
 
-            if ((algo == "deepCSV") || (algo == "pfDeepCSVJetTags:probb") || (algo == "pfDeepCSVJetTags:probbb"))
+            if ((algo == "deepCSV") || (algo == "pfDeepCSVJetTags:probb"))
                 return Algorithm::DeepCSV;
             
             return Algorithm::UNKNOWN;
