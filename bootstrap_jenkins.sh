@@ -22,18 +22,10 @@ function cms-merge-commit()
 git cms-init --upstream-only
 
 echo "---> Merging recipes..."
-cms-merge-commit cms-egamma EGM_gain_v1 f2ae5ef247d2544bdccd0460586b468eb35631c5
-cms-merge-commit rafaellopesdesa RegressionCheckNegEnergy 3aafeff0371a1d1eb3db9d95ef50c1a66da25690
-cms-merge-commit cms-met METRecipe_8020_for80Xintegration 92f73cd3d16a9529585865a365de271e0535b68d
+## add recipes here
 
 echo "---> Running git cms-checkdeps"
 git cms-checkdeps -a
-
-echo "---> Adding KaMuCa"
-git clone -o upstream https://github.com/bachtis/analysis.git -b KaMuCa_V4 KaMuCa 
-pushd KaMuCa
-git checkout 2ad38daae37a41a9c07f482e95f2455e3eb915b0
-popd
 
 echo "---> Adding TreeWrapper"
 git clone -o upstream https://github.com/blinkseb/TreeWrapper.git cp3_llbb/TreeWrapper
