@@ -7,9 +7,22 @@ Common framework for all cp3-llbb analyses
 * The current state of the art mini-AOD documentation can be found [here](https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookMiniAOD2015)
 * You will probably want to install as well [GridIn](https://github.com/cp3-llbb/GridIn) to run jobs on the grid, and one of the existing analyses ([TTAnalysis](https://github.com/cp3-llbb/TTAnalysis), [HHAnalysis](https://github.com/cp3-llbb/HHAnalysis), [ZAAnalysis](https://github.com/cp3-llbb/ZAAnalysis))
 
-## CMSSW release
+## CMSSW release and branches
 
-**CMSSW 8.0.30**
+We have different branches that contain the recipes and configuration for analysing different data samples.
+
+Currently, there are a `CMSSW_8_0_6p` branch for the analysis of 2016 MiniAOD with the
+[latest **CMSSW 8.0.X** release](https://raw.githubusercontent.com/cp3-llbb/Framework/CMSSW_8_0_6p/CMSSW.release),
+and a `CMSSW_9_3_6p2` branch for the analysis of Phase2 simulation MiniAOD with the
+[latest **CMSSW 9.3.X** release](https://raw.githubusercontent.com/cp3-llbb/Framework/CMSSW_9_3_6p2/CMSSW.release).
+
+The `master` branch does not contain any version-specific recipes or configuration,
+so it is not very useful by itself, but it can be used as a clean starting point
+for the analysis of a new data sample.
+New features should be added with a pull request for `master` by default,
+and merged to the different version branches
+(the idea is that this happens nearly automatically,
+such that merges of master into a version branch are fast-forward).
 
 ## First time setup instructions
 
@@ -18,12 +31,14 @@ Common framework for all cp3-llbb analyses
 source /nfs/soft/grid/ui_sl6/setup/grid-env.sh
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 
-wget https://raw.githubusercontent.com/cp3-llbb/Framework/CMSSW_8_0_6p/setup_project_with_framework.sh
-source setup_project_with_framework.sh
+wget https://raw.githubusercontent.com/cp3-llbb/Framework/master/setup_project_with_framework.sh
+source setup_project_with_framework.sh --branch BRANCH ## select a branch
 ```
 
-[This script](setup_project_with_framework.sh) will set up a CMSSW release area, apply the recipes in [``bootstrap_jenkins.sh``](bootstrap_jenkins.sh) and [``jenkins_postbuild.sh``](jenkins_postbuild.sh), perform an initial build, and add your and your colleagues' forks on GitHub as remotes for your ``Framework`` clone.
-Through the options `--branch NAME` and `--pr ID`, a project area for a different version can also be created.
+[This script](setup_project_with_framework.sh) will set up a CMSSW release area,
+apply the recipes in [``bootstrap_jenkins.sh``](bootstrap_jenkins.sh) and [``jenkins_postbuild.sh``](jenkins_postbuild.sh),
+perform an initial build, and add your and your colleagues' forks on GitHub as remotes for your ``Framework`` clone.
+The option `--branch NAME` can be used to select a branch (and CMSSW version, see above), and `--pr ID` to test a pull request.
 
 If you are using ingrid, here's a useful alias to put in your ``bashrc`` file:
 
@@ -41,7 +56,11 @@ cmsRun TestConfigurationMC.py
 ```
 
 # When willing to commit things
-  * Remember to *branch before committing anything*: ```git checkout -b my-new-branch```
+  * Remember to *branch before committing anything*: ```git checkout -b my-new-branch```,
+    and pick the correct branch to start from (and submit a pull request for):
+    `master` if you make a change that benefits all versions,
+    or your CMSSW version branch if it is specific to the data sample you are using
+    (different ID, scale factors, recipes etc.).
   * The ```first_setup.sh``` script took care of adding ```origin``` as your own repo, so to push just do the usual ```git push origin my-new-branch```
   * If you change anything to the output trees (new or modified branches, new recipes etc.), the automatic tests (see below) will fail, because they compare the outputs to reference files.
     You can resolve this by regenerating the reference files with the [`test/generate_reference_trees.sh`](test/generate_reference_trees.sh) script, after committing your other changes.
