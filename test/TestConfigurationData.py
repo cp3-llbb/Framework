@@ -30,7 +30,7 @@ framework.addAnalyzer('test', cms.PSet(
         ))
 
 framework.applyElectronRegression()
-framework.applyElectronSmearing()
+framework.applyElectronSmearing(tag='Moriond17_23Jan')
 
 from cp3_llbb.Framework.JetsProducer import discriminators_deepFlavour
 framework.redoJEC(addBtagDiscriminators=discriminators_deepFlavour)

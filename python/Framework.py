@@ -28,9 +28,6 @@ class Framework(object):
         self.__jer_resolution_file = None
         self.__jer_scalefactor_file = None
 
-        self.__kamuca_tag = 'DATA_80X_13TeV' if options.runOnData else 'MC_80X_13TeV'
-        self.__rochester_input = 'cp3_llbb/Framework/data/Rochester/2016.v3/config.txt'
-
         self.hltProcessName = options.hltProcessName
         self.isData = options.runOnData
         self.era = options.era
@@ -373,12 +370,14 @@ class Framework(object):
             print("New jets and MET collections: %r and %r" % (self.__miniaod_jet_collection, self.__miniaod_met_collection))
 
     @dep(before=("create", "muonScale"), performs=("correction", "muonScale"))
-    def applyMuonCorrection(self, type):
+    def applyMuonCorrection(self, type, tag=None, input=None):
         """
         Apply correction to muon
 
         Parameters:
             type: either "rochester" or "kamuca". Define the type of correction to apply
+            tag: KaMuCa tag (required for KaMuCa correction)
+            input: Rochester input (required for Rochester correction)
         """
 
         supported = ['kamuca', 'rochester']
@@ -391,16 +390,23 @@ class Framework(object):
             print("Applying %s correction to muons..." % type.capitalize())
 
         if type == "kamuca":
+            if not tag:
+                raise Exception("KaMuCa correction requested, but no tag given")
+            if ( (     self.isData and not tag.startswith("DATA_") )
+              or ( not self.isData and not tag.startswith("MC_") ) ):
+                raise Exception("KaMuCa tags for data should start with 'DATA_', for MC with 'MC_', got '{0}' and this is {1}".format(tag, ("data" if self.isData else "MC")))
             self.process.slimmedMuonsCorrected = cms.EDProducer('KaMuCaCorrectedPATMuonProducer',
                         src = cms.InputTag(self.__miniaod_muon_collection),
                         enabled = cms.bool(True),
-                        tag = cms.string(self.__kamuca_tag)
+                        tag = cms.string(tag)
                     )
         elif type == "rochester":
+            if not input:
+                raise Exception("Rochester correction requested, but no input given")
             self.process.slimmedMuonsCorrected = cms.EDProducer('RochesterCorrectedPATMuonProducer',
                         src = cms.InputTag(self.__miniaod_muon_collection),
                         enabled = cms.bool(True),
-                        input = cms.FileInPath(self.__rochester_input)
+                        input = cms.FileInPath(input)
                     )
 
         # Look for producers using the default muon input
@@ -444,10 +450,13 @@ class Framework(object):
             print("New electrons collection: %r" % (self.__miniaod_electron_collection))
 
     @dep(before=("create", "electronSmearing"), after="electronRegression", performs=("electronSmearing", "correction"))
-    def applyElectronSmearing(self):
+    def applyElectronSmearing(self, tag):
         """
         Apply electron smearing from
             https://twiki.cern.ch/twiki/bin/view/CMS/EGMSmearer
+
+        Parameters:
+            tag: correction file to use (from EgammaAnalysis.ElectronTools.calibrationTablesRun2.files)
         """
 
         if self.verbose:
@@ -467,7 +476,7 @@ class Framework(object):
         self.process.slimmedElectronsSmeared = calibratedPatElectrons.clone(
                 electrons = "selectedElectrons",
                 isMC = not self.isData,
-                correctionFile = files['Moriond17_23Jan']
+                correctionFile = files[tag]
                 )
 
         self.process.load('Configuration.StandardSequences.Services_cff')

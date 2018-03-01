@@ -44,10 +44,10 @@ from cp3_llbb.Framework.JetsProducer import discriminators_deepFlavour
 framework.redoJEC(addBtagDiscriminators=discriminators_deepFlavour)
 # framework.smearJets()
 # framework.smearJets(resolutionFile='cp3_llbb/Framework/data/Spring16_25nsV10_MC_PtResolution_AK4PFchs.txt', scaleFactorFile='cp3_llbb/Framework/data/Spring16_25nsV10_MC_SF_AK4PFchs.txt')
-# framework.applyMuonCorrection("kamuca")
-# framework.applyMuonCorrection("rochester")
+# framework.applyMuonCorrection("kamuca", tag="MC_80X_13TeV")
+# framework.applyMuonCorrection("rochester", input="cp3_llbb/Framework/data/Rochester/2016.v3/config.txt")
 # framework.applyElectronRegression()
-# framework.applyElectronSmearing()
+# framework.applyElectronSmearing(tag='Moriond17_23Jan')
 
 # framework.doSystematics(['jec', 'jer'])
 # framework.doSystematics(['jec'], jec={'uncertaintiesFile': 'cp3_llbb/HHAnalysis/data/Summer16_23Sep2016V4_MC_UncertaintySources_AK4PFchs.txt', 'splitBySources': True})
