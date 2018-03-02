@@ -27,5 +27,11 @@ echo "---> Merging recipes..."
 echo "---> Running git cms-checkdeps"
 git cms-checkdeps -a
 
+echo "---> Adding KaMuCa"
+git clone -o upstream https://github.com/bachtis/analysis.git -b KaMuCa_V4 KaMuCa
+pushd KaMuCa
+git checkout 2ad38daae37a41a9c07f482e95f2455e3eb915b0
+popd
+
 echo "---> Adding TreeWrapper"
 git clone -o upstream https://github.com/blinkseb/TreeWrapper.git cp3_llbb/TreeWrapper
