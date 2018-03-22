@@ -26,3 +26,10 @@ git cms-checkdeps -a
 
 echo "---> Adding TreeWrapper"
 git clone -o upstream https://github.com/blinkseb/TreeWrapper.git cp3_llbb/TreeWrapper
+
+echo "---> Adding phase2 EGamma"
+git cms-merge-topic -u nsmith-:EgammaFromMultiCl_932v2
+mkdir -p RecoEgamma && pushd RecoEgamma
+git clone -b integrated git@github.com:nsmith-/Phase2InterimID.git
+popd
+

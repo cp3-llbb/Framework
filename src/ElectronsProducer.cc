@@ -46,7 +46,7 @@ void ElectronsProducer::produce(edm::Event& event, const edm::EventSetup& eventS
 
         isEB.push_back(electron.isEB());
         isEE.push_back(electron.isEE());
-
+        
         // Same values used for cut-based electron ID. See:
         //     https://github.com/cms-sw/cmssw/blob/CMSSW_7_4_15/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleDzCut.cc#L64
         //     https://github.com/cms-sw/cmssw/blob/CMSSW_7_4_15/RecoEgamma/ElectronIdentification/plugins/cuts/GsfEleDxyCut.cc#L64
@@ -64,6 +64,17 @@ void ElectronsProducer::produce(edm::Event& event, const edm::EventSetup& eventS
             mva_id_values.push_back((*mva_id_values_handle)[electronRef]);
             mva_id_categories.push_back((*mva_id_categories_handle)[electronRef]);
         }
+
+        //PHASE2 ELECTRON ID :
+        phase2_mva_id_values.push_back(electron.userFloat("mvaValue"));
+        bool passesLoose = false;
+        passesLoose += !electron.isEB() && electron.pt() > 20 && electron.userFloat("mvaValue") > -0.919;
+        passesLoose += !electron.isEB() && electron.pt() > 10 && electron.pt() <=20 && electron.userFloat("mvaValue") > -0.320;
+        passesLoose += electron.isEB() && electron.pt() > 20 && electron.userFloat("mvaValue") > -0.797;
+        passesLoose += electron.isEB() && electron.pt() > 10 && electron.pt() <=20 && electron.userFloat("mvaValue") > -0.661;
+
+        phase2_mva_id_loose.push_back(passesLoose);
+
 
         Parameters p {{BinningVariable::Eta, electron.superCluster()->eta()}, {BinningVariable::Pt, electron.pt()}};
         ScaleFactors::store_scale_factors(p, event.isRealData());

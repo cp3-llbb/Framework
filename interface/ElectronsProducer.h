@@ -57,6 +57,9 @@ class ElectronsProducer: public LeptonsProducer<pat::Electron>, public Identifia
         BRANCH(mva_id_values, std::vector<float>);
         BRANCH(mva_id_categories, std::vector<int>);
 
+        BRANCH(phase2_mva_id_values, std::vector<float>);
+        BRANCH(phase2_mva_id_loose, std::vector<bool>);
+
         std::vector<edm::Ref<std::vector<pat::Electron>>> products;
 };
 

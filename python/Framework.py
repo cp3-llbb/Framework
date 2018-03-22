@@ -77,10 +77,10 @@ class Framework(object):
                 input_files = cms.vstring()
                 )
 
-        process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
-        process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
-        process.load('Configuration.StandardSequences.MagneticField_38T_cff')
         process.load('FWCore.MessageLogger.MessageLogger_cfi')
+        process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
+        process.load('Configuration.StandardSequences.MagneticField_cff')
+        process.load('Configuration.Geometry.GeometryExtended2023D17Reco_cff')
 
         process.GlobalTag.globaltag = self.globalTag
 
@@ -349,7 +349,7 @@ class Framework(object):
 
         self.process.shiftedMETCorrModuleForSmearedJets = cms.EDProducer('ShiftedParticleMETcorrInputProducer',
                 srcOriginal = cms.InputTag(self.__miniaod_jet_collection),
-                srcShifted = cms.InputTag('slimmedJetsSmeared')
+                srcShifted = cms.InputTag('slimmedJets')
                 )
 
         self.process.slimmedMETsSmeared = cms.EDProducer('CorrectedPATMETProducer',
@@ -360,13 +360,13 @@ class Framework(object):
         # Look for producers using the default jet and met collections
         for producer in self.producers:
             p = getattr(self.process.framework.producers, producer)
-            change_input_tags_and_strings(p, self.__miniaod_jet_collection, 'slimmedJetsSmeared', 'producers.' + producer, '    ')
+            change_input_tags_and_strings(p, self.__miniaod_jet_collection, 'slimmedJets', 'producers.' + producer, '    ')
             change_input_tags_and_strings(p, self.__miniaod_met_collection, 'slimmedMETsSmeared', 'producers.' + producer, '    ')
 
             if p.type == 'met':
                 p.parameters.slimmed = cms.untracked.bool(False)
 
-        self.__miniaod_jet_collection = 'slimmedJetsSmeared'
+        self.__miniaod_jet_collection = 'slimmedJets'
         self.__miniaod_met_collection = 'slimmedMETsSmeared'
 
         if self.verbose:
@@ -509,23 +509,8 @@ class Framework(object):
     def configureElectronId_(self):
 
         with StdStreamSilenter():
-            from PhysicsTools.SelectorUtils.tools.vid_id_tools import DataFormat, switchOnVIDElectronIdProducer, setupAllVIDIdsInModule, setupVIDElectronSelection
-            switchOnVIDElectronIdProducer(self.process, DataFormat.MiniAOD)
-
-            # Use in input our own electorn collection
-            self.process.egmGsfElectronIDs.physicsObjectSrc = self.__miniaod_electron_collection
-
-            id_modules = [
-                    'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Summer16_80X_V1_cff',
-                    'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronHLTPreselecition_Summer16_V1_cff',
-                    'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_GeneralPurpose_V1_cff',
-                    'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_HZZ_V1_cff'
-                    ]
-
-            for mod in id_modules:
-                setupAllVIDIdsInModule(self.process, mod, setupVIDElectronSelection)
-
-            self.process.electronMVAValueMapProducer.srcMiniAOD = self.__miniaod_electron_collection
+          self.process.load("RecoEgamma.Phase2InterimID.phase2EgammaPAT_cff")
+          self.path += cms.Sequence(self.process.phase2Egamma)
 
     def _configureFramework(self):
 
