@@ -349,7 +349,7 @@ class Framework(object):
 
         self.process.shiftedMETCorrModuleForSmearedJets = cms.EDProducer('ShiftedParticleMETcorrInputProducer',
                 srcOriginal = cms.InputTag(self.__miniaod_jet_collection),
-                srcShifted = cms.InputTag('slimmedJets')
+                srcShifted = cms.InputTag('slimmedJetsSmeared')
                 )
 
         self.process.slimmedMETsSmeared = cms.EDProducer('CorrectedPATMETProducer',
@@ -360,13 +360,13 @@ class Framework(object):
         # Look for producers using the default jet and met collections
         for producer in self.producers:
             p = getattr(self.process.framework.producers, producer)
-            change_input_tags_and_strings(p, self.__miniaod_jet_collection, 'slimmedJets', 'producers.' + producer, '    ')
+            change_input_tags_and_strings(p, self.__miniaod_jet_collection, 'slimmedJetsSmeared', 'producers.' + producer, '    ')
             change_input_tags_and_strings(p, self.__miniaod_met_collection, 'slimmedMETsSmeared', 'producers.' + producer, '    ')
 
             if p.type == 'met':
                 p.parameters.slimmed = cms.untracked.bool(False)
 
-        self.__miniaod_jet_collection = 'slimmedJets'
+        self.__miniaod_jet_collection = 'slimmedJetsSmeared'
         self.__miniaod_met_collection = 'slimmedMETsSmeared'
 
         if self.verbose:
