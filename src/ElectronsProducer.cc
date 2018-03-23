@@ -84,10 +84,10 @@ void ElectronsProducer::produce(edm::Event& event, const edm::EventSetup& eventS
         phase2_mva_id_medium.push_back(passesMedium);
 
         bool passesTight = false;
-        passesMedium += !electron.isEB() && electron.pt() > 20 && electron.userFloat("mvaValue") > 0.983;
-        passesMedium += !electron.isEB() && electron.pt() > 10 && electron.pt() <=20 && electron.userFloat("mvaValue") > 0.969;
-        passesMedium += electron.isEB() && electron.pt() > 20 && electron.userFloat("mvaValue") > 0.988;
-        passesMedium += electron.isEB() && electron.pt() > 10 && electron.pt() <=20 && electron.userFloat("mvaValue") > 0.986;
+        passesTight += !electron.isEB() && electron.pt() > 20 && electron.userFloat("mvaValue") > 0.983;
+        passesTight += !electron.isEB() && electron.pt() > 10 && electron.pt() <=20 && electron.userFloat("mvaValue") > 0.969;
+        passesTight += electron.isEB() && electron.pt() > 20 && electron.userFloat("mvaValue") > 0.988;
+        passesTight += electron.isEB() && electron.pt() > 10 && electron.pt() <=20 && electron.userFloat("mvaValue") > 0.986;
         phase2_mva_id_tight.push_back(passesTight);
 
 
