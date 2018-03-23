@@ -21,9 +21,6 @@ function cms-merge-commit()
 
 git cms-init --upstream-only
 
-echo "---> Running git cms-checkdeps"
-git cms-checkdeps -a
-
 echo "---> Adding TreeWrapper"
 git clone -o upstream https://github.com/blinkseb/TreeWrapper.git cp3_llbb/TreeWrapper
 
@@ -33,3 +30,5 @@ mkdir -p RecoEgamma && pushd RecoEgamma
 git clone -b integrated git@github.com:nsmith-/Phase2InterimID.git
 popd
 
+echo "---> Running git cms-checkdeps"
+git cms-checkdeps -a

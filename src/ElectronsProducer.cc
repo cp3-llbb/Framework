@@ -68,26 +68,38 @@ void ElectronsProducer::produce(edm::Event& event, const edm::EventSetup& eventS
         //PHASE2 ELECTRON ID :
         //Values from here :
         //https://github.com/CMS-HGCAL/EgammaTools/blob/master/ELECTRONBDT.md#recommended-id-cuts
-        phase2_mva_id_values.push_back(electron.userFloat("mvaValue"));
-        bool passesLoose = false;
-        passesLoose += !electron.isEB() && electron.pt() > 20 && electron.userFloat("mvaValue") > -0.919;
-        passesLoose += !electron.isEB() && electron.pt() > 10 && electron.pt() <=20 && electron.userFloat("mvaValue") > -0.320;
-        passesLoose += electron.isEB() && electron.pt() > 20 && electron.userFloat("mvaValue") > -0.797;
-        passesLoose += electron.isEB() && electron.pt() > 10 && electron.pt() <=20 && electron.userFloat("mvaValue") > -0.661;
+        
+        const float mvaOutput = electron.userFloat("mvaValue");
+        bool passesLoose{false}, passesMedium{false}, passesTight{false};
+        
+        if ( !electron.isEB() ) {
+          if ( electron.pt() > 20. ) {
+            passesTight  = mvaOutput >  0.983;
+            passesMedium = mvaOutput >  0.591;
+            passesLoose  = mvaOutput > -0.919;
+          }
+          else if ( electron.pt() > 10. ) {
+            passesTight  = mvaOutput >  0.969;
+            passesMedium = mvaOutput >  0.777;
+            passesLoose  = mvaOutput > -0.320; 
+          }
+        }
+        else {
+          if ( electron.pt() > 20. ) {
+            passesTight  = mvaOutput >  0.988;
+            passesMedium = mvaOutput >  0.723;
+            passesLoose  = mvaOutput > -0.797;
+          }
+          else if ( electron.pt() > 10. ) {
+            passesTight  = mvaOutput >  0.986;
+            passesMedium = mvaOutput >  0.855;
+            passesLoose  = mvaOutput > -0.661;
+          }
+        }
+
+        phase2_mva_id_values.push_back(mvaOutput);
         phase2_mva_id_loose.push_back(passesLoose);
-
-        bool passesMedium = false;
-        passesMedium += !electron.isEB() && electron.pt() > 20 && electron.userFloat("mvaValue") > 0.591;
-        passesMedium += !electron.isEB() && electron.pt() > 10 && electron.pt() <=20 && electron.userFloat("mvaValue") > -0.777;
-        passesMedium += electron.isEB() && electron.pt() > 20 && electron.userFloat("mvaValue") > 0.723;
-        passesMedium += electron.isEB() && electron.pt() > 10 && electron.pt() <=20 && electron.userFloat("mvaValue") > 0.855;
         phase2_mva_id_medium.push_back(passesMedium);
-
-        bool passesTight = false;
-        passesTight += !electron.isEB() && electron.pt() > 20 && electron.userFloat("mvaValue") > 0.983;
-        passesTight += !electron.isEB() && electron.pt() > 10 && electron.pt() <=20 && electron.userFloat("mvaValue") > 0.969;
-        passesTight += electron.isEB() && electron.pt() > 20 && electron.userFloat("mvaValue") > 0.988;
-        passesTight += electron.isEB() && electron.pt() > 10 && electron.pt() <=20 && electron.userFloat("mvaValue") > 0.986;
         phase2_mva_id_tight.push_back(passesTight);
 
 
