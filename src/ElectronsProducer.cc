@@ -66,14 +66,29 @@ void ElectronsProducer::produce(edm::Event& event, const edm::EventSetup& eventS
         }
 
         //PHASE2 ELECTRON ID :
+        //Values from here :
+        //https://github.com/CMS-HGCAL/EgammaTools/blob/master/ELECTRONBDT.md#recommended-id-cuts
         phase2_mva_id_values.push_back(electron.userFloat("mvaValue"));
         bool passesLoose = false;
         passesLoose += !electron.isEB() && electron.pt() > 20 && electron.userFloat("mvaValue") > -0.919;
         passesLoose += !electron.isEB() && electron.pt() > 10 && electron.pt() <=20 && electron.userFloat("mvaValue") > -0.320;
         passesLoose += electron.isEB() && electron.pt() > 20 && electron.userFloat("mvaValue") > -0.797;
         passesLoose += electron.isEB() && electron.pt() > 10 && electron.pt() <=20 && electron.userFloat("mvaValue") > -0.661;
-
         phase2_mva_id_loose.push_back(passesLoose);
+
+        bool passesMedium = false;
+        passesMedium += !electron.isEB() && electron.pt() > 20 && electron.userFloat("mvaValue") > 0.591;
+        passesMedium += !electron.isEB() && electron.pt() > 10 && electron.pt() <=20 && electron.userFloat("mvaValue") > -0.777;
+        passesMedium += electron.isEB() && electron.pt() > 20 && electron.userFloat("mvaValue") > 0.723;
+        passesMedium += electron.isEB() && electron.pt() > 10 && electron.pt() <=20 && electron.userFloat("mvaValue") > 0.855;
+        phase2_mva_id_medium.push_back(passesMedium);
+
+        bool passesTight = false;
+        passesMedium += !electron.isEB() && electron.pt() > 20 && electron.userFloat("mvaValue") > 0.983;
+        passesMedium += !electron.isEB() && electron.pt() > 10 && electron.pt() <=20 && electron.userFloat("mvaValue") > 0.969;
+        passesMedium += electron.isEB() && electron.pt() > 20 && electron.userFloat("mvaValue") > 0.988;
+        passesMedium += electron.isEB() && electron.pt() > 10 && electron.pt() <=20 && electron.userFloat("mvaValue") > 0.986;
+        phase2_mva_id_tight.push_back(passesTight);
 
 
         Parameters p {{BinningVariable::Eta, electron.superCluster()->eta()}, {BinningVariable::Pt, electron.pt()}};
