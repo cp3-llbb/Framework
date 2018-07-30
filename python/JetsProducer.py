@@ -2,7 +2,7 @@ import FWCore.ParameterSet.Config as cms
 
 discriminators_deepFlavour = list("{algo}:prob{tagCat}".format(algo=algo, tagCat=tagCat)
         for algo in ("pfDeepCSVJetTags",)# "pfDeepCMVAJetTags" seems more difficult on miniAOD in CMSSW_8_0_30
-        for tagCat in ("b", "bb", "c", "cc", "udsg")
+        for tagCat in ("b", "bb", "c", "udsg")
         )
 
 default_configuration = cms.PSet(
