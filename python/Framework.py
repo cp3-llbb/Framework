@@ -1,4 +1,5 @@
 import copy
+from itertools import chain
 
 import FWCore.ParameterSet.Config as cms
 from FWCore.ParameterSet.SequenceTypes import _SequenceCollection
@@ -66,7 +67,6 @@ class Framework(object):
 
         process.options = cms.untracked.PSet(
                 wantSummary = cms.untracked.bool(True),
-                allowUnscheduled = cms.untracked.bool(True)
                 )
 
         # Create an empty PSet for communication with GridIn
@@ -277,11 +277,13 @@ class Framework(object):
             self.useJECDatabase(JECDatabase)
 
         from cp3_llbb.Framework.Tools import recorrect_jets, recorrect_met
-        jet_collection = recorrect_jets(self.process, self.isData, 'AK4PFchs', self.__miniaod_jet_collection, addBtagDiscriminators=addBtagDiscriminators)
-        met_collection = recorrect_met(self.process, self.isData, self.__miniaod_met_collection, jet_collection)
+        jet_collection, prodNames_jet = recorrect_jets(self.process, self.isData, 'AK4PFchs', self.__miniaod_jet_collection, addBtagDiscriminators=addBtagDiscriminators)
+        met_collection, prodNames_met = recorrect_met(self.process, self.isData, self.__miniaod_met_collection, jet_collection)
 
         # Fat jets
-        fat_jet_collection = recorrect_jets(self.process, self.isData, 'AK8PFchs', self.__miniaod_fat_jet_collection, addBtagDiscriminators=addBtagDiscriminators)
+        fat_jet_collection, prodNames_fatjet = recorrect_jets(self.process, self.isData, 'AK8PFchs', self.__miniaod_fat_jet_collection, addBtagDiscriminators=addBtagDiscriminators)
+
+        self.path.associate(cms.Task(*(getattr(self.process, name) for name in chain(prodNames_jet, prodNames_met, prodNames_fatjet))))
 
         # Look for producers using the default jet and met collections
         for producer in self.producers:
@@ -354,6 +356,8 @@ class Framework(object):
                 srcCorrections = cms.VInputTag(cms.InputTag('shiftedMETCorrModuleForSmearedJets'))
                 )
 
+        self.path.associate(cms.Task(self.process.slimmedJetsSmeared, self.process.shiftedMETCorrModuleForSmearedJets, self.process.slimmedMETsSmeared))
+
         # Look for producers using the default jet and met collections
         for producer in self.producers:
             p = getattr(self.process.framework.producers, producer)
@@ -408,6 +412,7 @@ class Framework(object):
                         enabled = cms.bool(True),
                         input = cms.FileInPath(input)
                     )
+        self.path.associate(cms.Task(self.process.slimmedMuonsCorrected))
 
         # Look for producers using the default muon input
         for producer in self.producers:
@@ -438,6 +443,7 @@ class Framework(object):
 
         # Rename the collection
         self.process.slimmedElectronsWithRegression = self.process.slimmedElectrons.clone()
+        self.path.associate(cms.Task(self.process.slimmedElectronsWithRegression))
 
         # Look for producers using the default electron input
         for producer in self.producers:
@@ -486,6 +492,8 @@ class Framework(object):
                     engineName = cms.untracked.string('TRandom3')
                     )
                 )
+
+        self.path.associate(cms.Task(self.process.selectedElectrons, self.process.slimmedElectronsSmeared, self.process.RandomNumberGeneratorService))
 
         # Look for producers using the default electron input
         for producer in self.producers:
