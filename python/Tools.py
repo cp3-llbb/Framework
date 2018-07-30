@@ -210,7 +210,7 @@ def recorrect_met(process, isData, metCollection, jetCollection):
             , [ "patPFMetT1Txy", "patPFMetTxyCorr" ]
         ))+
         (["ak4PFCHS{0}Corrector".format(corrType) for corrType in ("L1FastL2L3", "L1Fastjet", "L2Relative", "L3Absolute", "L1FastL2L3Residual", "Residual")] if isData else [])+
-        [ "patCaloMet", "metrawCaloNewJEC" ])
+        [ "patCaloMet", "patCHSMet", "pfMetCHS", "pfCHS", "patTrkMet", "pfMetTrk", "pfTrk", "metrawCaloNewJEC" ])
 
 def check_tag_(db_file, tag):
     import sqlite3
