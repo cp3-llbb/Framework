@@ -23,38 +23,12 @@
 #include "FWCore/ParameterSet/interface/ParameterSetDescription.h"
 
 #include <cp3_llbb/Framework/interface/Rochester.h>
-#include <KaMuCa/Calibration/interface/KalmanMuonCalibrator.h>
 
 #include <memory>
 #include <random>
 #include <boost/filesystem.hpp>
 
 namespace cp3 {
-
-    class KaMuCaCorrector {
-        public:
-            explicit KaMuCaCorrector(const edm::ParameterSet& cfg) {
-                std::string tag = cfg.getParameter<std::string>("tag");
-                corrector.reset(new KalmanMuonCalibrator(tag));
-            }
-
-            template<typename T>
-            T correct(const edm::Event& event, const T& muon) {
-                auto corrected_pt = corrector->getCorrectedPt(muon.pt(), muon.eta(), muon.phi(), muon.charge());
-                if (! event.isRealData())
-                    corrected_pt = corrector->smear(corrected_pt, muon.eta());
-
-                double ratio = corrected_pt / muon.pt();
-
-                T corrected_muon = muon;
-                corrected_muon.setP4(corrected_muon.p4() * ratio);
-
-                return corrected_muon;
-            }
-
-        private:
-            std::unique_ptr<KalmanMuonCalibrator> corrector;
-    };
 
     class RochesterCorrector {
         public:
