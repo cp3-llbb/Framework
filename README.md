@@ -13,16 +13,8 @@ We have different branches that contain the recipes and configuration for analys
 
 Currently, there are a `CMSSW_8_0_6p` branch for the analysis of 2016 MiniAOD with the
 [latest **CMSSW 8.0.X** release](https://raw.githubusercontent.com/cp3-llbb/Framework/CMSSW_8_0_6p/CMSSW.release),
-and a `CMSSW_9_3_6p2` branch for the analysis of Phase2 simulation MiniAOD with the
-[latest **CMSSW 9.3.X** release](https://raw.githubusercontent.com/cp3-llbb/Framework/CMSSW_9_3_6p2/CMSSW.release).
-
-The `master` branch does not contain any version-specific recipes or configuration,
-so it is not very useful by itself, but it can be used as a clean starting point
-for the analysis of a new data sample.
-New features should be added with a pull request for `master` by default,
-and merged to the different version branches
-(the idea is that this happens nearly automatically,
-such that merges of master into a version branch are fast-forward).
+and a `CMSSW_9_4_X` branch for analysis of 2016 2016 re-MiniAOD (and 2017 MiniAOD) with the
+[latest **CMSSW 9.4.X** release](https://raw.githubusercontent.com/cp3-llbb/Framework/CMSSW_9_4_X/CMSSW.release).
 
 ## First time setup instructions
 
@@ -31,7 +23,7 @@ such that merges of master into a version branch are fast-forward).
 source /nfs/soft/grid/ui_sl6/setup/grid-env.sh
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 
-wget https://raw.githubusercontent.com/cp3-llbb/Framework/master/setup_project_with_framework.sh
+wget https://raw.githubusercontent.com/cp3-llbb/Framework/CMSSW_9_4_X/setup_project_with_framework.sh
 source setup_project_with_framework.sh --branch BRANCH ## select a branch
 ```
 
@@ -56,11 +48,7 @@ cmsRun TestConfigurationMC.py
 ```
 
 # When willing to commit things
-  * Remember to *branch before committing anything*: ```git checkout -b my-new-branch```,
-    and pick the correct branch to start from (and submit a pull request for):
-    `master` if you make a change that benefits all versions,
-    or your CMSSW version branch if it is specific to the data sample you are using
-    (different ID, scale factors, recipes etc.).
+  * Remember to *branch before committing anything*: ```git checkout -b my-new-branch```
   * The ```first_setup.sh``` script took care of adding ```origin``` as your own repo, so to push just do the usual ```git push origin my-new-branch```
   * If you change anything to the output trees (new or modified branches, new recipes etc.), the automatic tests (see below) will fail, because they compare the outputs to reference files.
     You can resolve this by regenerating the reference files with the [`test/generate_reference_trees.sh`](test/generate_reference_trees.sh) script, after committing your other changes.
