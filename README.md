@@ -24,7 +24,7 @@ source /nfs/soft/grid/ui_sl6/setup/grid-env.sh
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 
 wget https://raw.githubusercontent.com/cp3-llbb/Framework/CMSSW_9_4_X/setup_project_with_framework.sh
-source setup_project_with_framework.sh --branch BRANCH ## select a branch
+source setup_project_with_framework.sh --branch CMSSW_9_4_X
 ```
 
 [This script](setup_project_with_framework.sh) will set up a CMSSW release area,
