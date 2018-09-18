@@ -22,6 +22,7 @@ function cms-merge-commit()
 git cms-init --upstream-only
 
 echo "---> Merging recipes..."
+git cms-merge-topic UAEDF-tomc:eleCutBasedId_94X_V2
 ## add recipes here
 
 echo "---> Running git cms-checkdeps"
