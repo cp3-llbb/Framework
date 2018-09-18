@@ -89,7 +89,7 @@ rmdir "${TEMPDIR}"
 
 # Configure git remotes
 pushd "cp3_llbb/Framework" &> /dev/null
-source first_setup.sh
+scripts/updateremotes
 popd &> /dev/null
 
 echo ""

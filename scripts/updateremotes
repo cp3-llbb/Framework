@@ -1,0 +1,88 @@
+#!/usr/bin/env python
+"""
+Add active forks of the upstream repository on github as remotes and set up 'origin' as the user fork
+
+For the upstream repository, the 'upstream' remote is taken, or otherwise the one under 'https://github.com/cp3-llbb'.
+Active forks are taken as all those that have been pushed to over the last year.
+"""
+from __future__ import print_function
+import os.path
+import os, sys
+import subprocess
+from datetime import datetime, timedelta
+import requests
+
+ACTIVE_THRESHOLD = timedelta(366)
+upstream = "cp3-llbb" ## default only
+
+try:
+    toplevel = subprocess.check_output(["git", "rev-parse", "--show-toplevel"]).strip()
+    repoName = os.path.split(toplevel)[-1]
+except subprocess.CalledProcessError:
+    sys.exit(1)
+## make sure we are in a package
+if "CMSSW_BASE" not in os.environ:
+    print("CMSSW_BASE is not defined, did you forget to run cmsenv?")
+    sys.exit(1)
+if os.path.samefile(toplevel, os.path.expandvars("${CMSSW_BASE}/src")):
+    print("The top-level git repository is CMSSW. This script should be run for a package in a standalone repository")
+    sys.exit(1)
+
+print("Updating remotes for '{0}'".format(toplevel))
+
+try:
+    remoteUserName = subprocess.check_output(["git", "config", "--get", "user.github"]).strip()
+except subprocess.CalledProcessError:
+    print("No valid github username, please set 'user.github' in your git configuraiton")
+    sys.exit(1)
+
+existing = dict((rnm, subprocess.check_output(["git", "remote", "get-url", rnm]).strip())
+        for rnm in subprocess.check_output(["git", "remote"]).strip().split("\n"))
+if len(existing) == 0:
+    print("Warning: no remotes defined yet, is this a new package? Assuming upstream under '{0}' and repository name '{1}'".format(upstream, repoName))
+else:
+    ## get upstream and validate the repository name
+    aRemoteFetchUrl = existing.get("upstream", existing.get("origin", next(existing.itervalues())))
+    remoteRepoName = aRemoteFetchUrl.split("/")[-1].split(".")[0] ## dirname, with ".git" stripped
+    if repoName != remoteRepoName:
+        print("Warning: directory name {0} differs from remote {1}, staying with the latter")
+        repoName = remoteRepoName
+    if "upstream" in existing:
+        upstream = existing["upstream"].split("/")[-2]
+    else:
+        print("Warning: no remote 'upstream' defined, assuming '{0}'".format(upstream))
+
+
+def makeCloneUrl(owner=None, name=repoName):
+    return "https://github.com/{owner}/{name}.git".format(owner=owner, name=name)
+def makePushUrl(owner=None, name=repoName):
+    return "git@github.com:{owner}/{name}.git".format(owner=owner, name=name)
+
+remotesToAdd = {
+    "upstream" : makeCloneUrl(owner=upstream),
+    "origin"   : makeCloneUrl(owner=remoteUserName),
+    }
+pushToAdd = {
+    "upstream" : makePushUrl(owner=upstream),
+    "origin"   : makePushUrl(owner=remoteUserName),
+    }
+
+forks_resp = requests.get("https://api.github.com/repos/{owner}/{name}/forks".format(owner=upstream, name=repoName))
+if forks_resp.status_code != requests.codes.ok:
+    print("Github API query of forks failed. Does the repository 'https://github.com/{owner}/{name}' exist?".format(owner=upstream, name=repoName))
+    sys.exit(1)
+forks = forks_resp.json()
+now_utc = datetime.utcnow()
+remotesToAdd.update(dict((fork["owner"]["login"], fork["clone_url"]) for fork in forks_resp.json()
+    if now_utc - datetime.strptime(fork["pushed_at"], "%Y-%m-%dT%H:%M:%SZ") < ACTIVE_THRESHOLD
+    ))
+
+for remote, fetchUrl in remotesToAdd.iteritems():
+    if remote not in existing:
+        print("Adding remote {0}: {1}".format(remote, fetchUrl))
+        subprocess.check_call(["git", "remote", "add", remote, fetchUrl])
+    if remote in pushToAdd and ( remote not in existing or subprocess.check_output(["git", "remote", "get-url", "--push", remote]).strip().startswith("https") ):
+        print("Setting push url for {0} to {1}".format(remote, pushToAdd[remote]))
+        subprocess.check_call(["git", "remote", "set-url", "--push", remote, pushToAdd[remote]])
+    if remote in ("upstream", "origin") and remote in existing and existing[remote] != fetchUrl:
+        print("Warning: existing remote {0} has an unexpected url '{1}', expected '{2}'".format(remote, existing[remote], fetchUrl))

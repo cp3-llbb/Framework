@@ -29,7 +29,8 @@ source setup_project_with_framework.sh --branch CMSSW_9_4_X
 
 [This script](setup_project_with_framework.sh) will set up a CMSSW release area,
 apply the recipes in [``bootstrap_jenkins.sh``](bootstrap_jenkins.sh) and [``jenkins_postbuild.sh``](jenkins_postbuild.sh),
-perform an initial build, and add your and your colleagues' forks on GitHub as remotes for your ``Framework`` clone.
+perform an initial build, and add your and your colleagues' forks on GitHub as remotes for your ``Framework`` clone
+(all those that have been pushed to in the last year; you can update the list by running ``updateremotes``).
 The option `--branch NAME` can be used to select a branch (and CMSSW version, see above), and `--pr ID` to test a pull request.
 
 If you are using ingrid, here's a useful alias to put in your ``bashrc`` file:
@@ -49,7 +50,7 @@ cmsRun TestConfigurationMC.py
 
 # When willing to commit things
   * Remember to *branch before committing anything*: ```git checkout -b my-new-branch```
-  * The ```first_setup.sh``` script took care of adding ```origin``` as your own repo, so to push just do the usual ```git push origin my-new-branch```
+  * The ```updateremotes``` script (run from ```setup_project_with_framework.sh```) took care of adding ```origin``` as your own repo, so to push just do the usual ```git push origin my-new-branch```
   * If you change anything to the output trees (new or modified branches, new recipes etc.), the automatic tests (see below) will fail, because they compare the outputs to reference files.
     You can resolve this by regenerating the reference files with the [`test/generate_reference_trees.sh`](test/generate_reference_trees.sh) script, after committing your other changes.
     It will also print a summary of all differences in the output files. If these are as expected, you can make a new commit with the updated reference files.
