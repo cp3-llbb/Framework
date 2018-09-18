@@ -2,7 +2,7 @@
 
 /** \class CorrectedMuonProducerT
  *
- * Produce collection of corrected muons using either KaMuCa or Rochester corrections.
+ * Produce collection of corrected muons using either KaMuCa (disabled) or Rochester corrections.
  *
  * \author Sébastien Brochet
  *
@@ -23,7 +23,9 @@
 #include "FWCore/ParameterSet/interface/ParameterSetDescription.h"
 
 #include <cp3_llbb/Framework/interface/Rochester.h>
-#include <KaMuCa/Calibration/interface/KalmanMuonCalibrator.h>
+// NOTE uncomment also the commented lines in KaMuCaCorrector to re-enable
+// #include <KaMuCa/Calibration/interface/KalmanMuonCalibrator.h>
+class KalmanMuonCalibrator;
 
 #include <memory>
 #include <random>
@@ -35,14 +37,14 @@ namespace cp3 {
         public:
             explicit KaMuCaCorrector(const edm::ParameterSet& cfg) {
                 std::string tag = cfg.getParameter<std::string>("tag");
-                corrector.reset(new KalmanMuonCalibrator(tag));
+                // corrector.reset(new KalmanMuonCalibrator(tag));
             }
 
             template<typename T>
             T correct(const edm::Event& event, const T& muon) {
-                auto corrected_pt = corrector->getCorrectedPt(muon.pt(), muon.eta(), muon.phi(), muon.charge());
-                if (! event.isRealData())
-                    corrected_pt = corrector->smear(corrected_pt, muon.eta());
+                auto corrected_pt = muon.pt(); // corrector->getCorrectedPt(muon.pt(), muon.eta(), muon.phi(), muon.charge());
+                // if (! event.isRealData())
+                //     corrected_pt = corrector->smear(corrected_pt, muon.eta());
 
                 double ratio = corrected_pt / muon.pt();
 
@@ -53,7 +55,7 @@ namespace cp3 {
             }
 
         private:
-            std::unique_ptr<KalmanMuonCalibrator> corrector;
+            // std::unique_ptr<KalmanMuonCalibrator> corrector;
     };
 
     class RochesterCorrector {
