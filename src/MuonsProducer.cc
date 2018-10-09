@@ -39,7 +39,7 @@ void MuonsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup
 
         pfIso = muon.pfIsolationR04();
         computeIsolations_R04(pfIso.sumChargedHadronPt, pfIso.sumNeutralHadronEt, pfIso.sumPhotonEt, pfIso.sumPUPt, muon.pt(), muon.eta(), rho);
-
+        
         isLoose.push_back(muon.isLooseMuon());
         isMedium.push_back(muon.isMediumMuon());
         isMedium2016.push_back(isMediumMuon2016(muon));
