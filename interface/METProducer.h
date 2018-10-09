@@ -17,7 +17,8 @@ class METProducer: public Framework::Producer {
         virtual ~METProducer() {}
 
         virtual void doConsumes(const edm::ParameterSet& config, edm::ConsumesCollector&& collector) override {
-            m_met_token = collector.consumes<std::vector<pat::MET>>(config.getUntrackedParameter<edm::InputTag>("met", edm::InputTag("slimmedMETs")));
+            m_met_token    = collector.consumes<std::vector<pat::MET>>(config.getUntrackedParameter<edm::InputTag>("met", edm::InputTag("slimmedMETs")));
+            m_metCov_token = collector.consumes<ROOT::Math::SMatrix<double,2,2,ROOT::Math::MatRepSym<double,2> >>(config.getUntrackedParameter<edm::InputTag>("metCov", edm::InputTag("METSignificance","METCovariance")));
         }
 
         virtual void produce(edm::Event& event, const edm::EventSetup& eventSetup) override;
@@ -32,12 +33,18 @@ class METProducer: public Framework::Producer {
 
         // Tokens
         edm::EDGetTokenT<std::vector<pat::MET>> m_met_token;
+        edm::EDGetTokenT<ROOT::Math::SMatrix<double,2,2,ROOT::Math::MatRepSym<double,2> >> m_metCov_token;
 
     public:
         // Tree members
         LorentzVector& p4 = tree["p4"].write<LorentzVector>();
         float& sumEt = tree["sumEt"].write<float>();
         float& significance = tree["significance"].write<float>();
+
+        float& CovMatrix00 = tree["CovMatrix00"].write<float>();
+        float& CovMatrix01 = tree["CovMatrix01"].write<float>();
+        float& CovMatrix10 = tree["CovMatrix10"].write<float>();
+        float& CovMatrix11 = tree["CovMatrix11"].write<float>();
 
         float& uncorrectedPt = create_branch("uncorrectedPt");
         float& uncorrectedPhi = create_branch("uncorrectedPhi");
