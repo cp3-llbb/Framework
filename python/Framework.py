@@ -386,19 +386,14 @@ class Framework(object):
         if self.verbose:
             print("New jets and MET collections: %r and %r" % (self.__miniaod_jet_collection, self.__miniaod_met_collection))
 
-        self.__jer_done = True
-
+    @dep(before=("create", "metSignificanceAndCovMatrix"), after=("jec"), performs=("correction", "metSignificanceAndCovMatrix"))
     def redoMETsSignificance(self):
         """
         Redo MET significance
 
-        Adding two new collections: "METCovariance" and "METSignificance"
+        Add two new collections: "METCovariance" and "METSignificance"
         """
 
-        self.ensureNotCreated()
-
-        if not self.__jer_done or not self.__jec_done:
-            return self.process
 
         if self.verbose:
             print("")
