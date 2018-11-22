@@ -14,6 +14,10 @@ void TausProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup)
     edm::Handle<std::vector<reco::Vertex>> vertices_handle;
     event.getByToken(m_vertices_token, vertices_handle);
 
+    edm::Handle<std::vector<reco::GenParticle>> genParticles_handle;
+    event.getByToken(m_pruned_token, genParticles_handle);
+    auto genParticles = *genParticles_handle;
+
     const reco::Vertex& primary_vertex = (*vertices_handle)[0];
 
     double rho = *rho_handle;
@@ -22,40 +26,30 @@ void TausProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup)
         // if (! pass_cut(tau))
         //     continue;
         fill_candidate(tau, tau.genParticle());
-        // reco::MuonPFIsolation pfIso = tau.pfIsolationR03();
-        // computeIsolations_R03(pfIso.sumChargedHadronPt, pfIso.sumNeutralHadronEt, pfIso.sumPhotonEt, pfIso.sumPUPt, tau.pt(), tau.eta(), rho);
-        //
-        // pfIso = tau.pfIsolationR04();
-        // computeIsolations_R04(pfIso.sumChargedHadronPt, pfIso.sumNeutralHadronEt, pfIso.sumPhotonEt, pfIso.sumPUPt, tau.pt(), tau.eta(), rho);
-        //
-        decayModeFinding.push_back(tau.tauID("decayModeFinding"));
-        decayModeFindingNewDMs.push_back(tau.tauID("decayModeFindingNewDMs"));
-        byLooseCombinedIsolationDeltaBetaCorr3Hits.push_back(tau.tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits"));
-        byMediumCombinedIsolationDeltaBetaCorr3Hits.push_back(tau.tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits"));
-        byTightCombinedIsolationDeltaBetaCorr3Hits.push_back(tau.tauID("byTightCombinedIsolationDeltaBetaCorr3Hits"));
 
-        byVLooseIsolationMVArun2v1DBoldDMwLT.push_back(tau.tauID("byVLooseIsolationMVArun2v1DBoldDMwLT"));
-        byLooseIsolationMVArun2v1DBoldDMwLT.push_back(tau.tauID("byLooseIsolationMVArun2v1DBoldDMwLT"));
-        byMediumIsolationMVArun2v1DBoldDMwLT.push_back(tau.tauID("byMediumIsolationMVArun2v1DBoldDMwLT"));
-        byTightIsolationMVArun2v1DBoldDMwLT.push_back(tau.tauID("byTightIsolationMVArun2v1DBoldDMwLT"));
-        byVTightIsolationMVArun2v1DBoldDMwLT.push_back(tau.tauID("byVTightIsolationMVArun2v1DBoldDMwLT"));
-        byVLooseIsolationMVArun2v1DBdR03oldDMwLT.push_back(tau.tauID("byVLooseIsolationMVArun2v1DBdR03oldDMwLT"));
-        byLooseIsolationMVArun2v1DBdR03oldDMwLT.push_back(tau.tauID("byLooseIsolationMVArun2v1DBdR03oldDMwLT"));
-        byMediumIsolationMVArun2v1DBdR03oldDMwLT.push_back(tau.tauID("byMediumIsolationMVArun2v1DBdR03oldDMwLT"));
-        byTightIsolationMVArun2v1DBdR03oldDMwLT.push_back(tau.tauID("byTightIsolationMVArun2v1DBdR03oldDMwLT"));
-        byVTightIsolationMVArun2v1DBdR03oldDMwLT.push_back(tau.tauID("byVTightIsolationMVArun2v1DBdR03oldDMwLT"));
-        byVLooseIsolationMVArun2v1DBnewDMwLT.push_back(tau.tauID("byVLooseIsolationMVArun2v1DBnewDMwLT"));
-        byLooseIsolationMVArun2v1DBnewDMwLT.push_back(tau.tauID("byLooseIsolationMVArun2v1DBnewDMwLT"));
-        byMediumIsolationMVArun2v1DBnewDMwLT.push_back(tau.tauID("byMediumIsolationMVArun2v1DBnewDMwLT"));
-        byTightIsolationMVArun2v1DBnewDMwLT.push_back(tau.tauID("byTightIsolationMVArun2v1DBnewDMwLT"));
-        byVTightIsolationMVArun2v1DBnewDMwLT.push_back(tau.tauID("byVTightIsolationMVArun2v1DBnewDMwLT"));
-        againstMuonLoose3.push_back(tau.tauID("againstMuonLoose3"));
-        againstMuonTight3.push_back(tau.tauID("againstMuonTight3"));
-        againstElectronVLooseMVA6.push_back(tau.tauID("againstElectronVLooseMVA6"));
-        againstElectronLooseMVA6.push_back(tau.tauID("againstElectronLooseMVA6"));
-        againstElectronMediumMVA6.push_back(tau.tauID("againstElectronMediumMVA6"));
-        againstElectronTightMVA6.push_back(tau.tauID("againstElectronTightMVA6"));
-        againstElectronVTightMVA6.push_back(tau.tauID("againstElectronVTightMVA6"));
+	// dz variable
+	pat::PackedCandidate const* packedLeadTauCand = dynamic_cast<pat::PackedCandidate const*>(tau.leadChargedHadrCand().get());
+	dz.push_back(packedLeadTauCand->dz());
+	
+	// gen truth based on Htautau convention
+	// https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2016#MC%20Matching
+	const LorentzVector tau_p4 = static_cast<LorentzVector>(tau.p4());
+	auto matchResult = TausProducer::LeptonGenMatch(tau_p4, genParticles);
+	gen_truth.push_back( static_cast<int>(matchResult.first) );
+
+	// Map of all the tauID discriminators
+	auto tauIDvector = tau.tauIDs();
+	tauDiscriminatorMap tauIDmap;
+	tauIDmap.reserve(tauIDvector.size());
+	for(auto pair: tauIDvector){
+		auto key = pair.first;
+		auto value = pair.second;
+		tauIDmap[key] = value;
+	}
+	IDmap.push_back(tauIDmap);
+
+
+	// tau decay mode
         decayMode.push_back(tau.decayMode());
 
         // // Same values used for cut-based tau ID. See:
@@ -68,3 +62,47 @@ void TausProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup)
         ScaleFactors::store_scale_factors(p, event.isRealData());
     }
 }
+
+	
+MatchResult TausProducer::LeptonGenMatch(const LorentzVector& p4, const std::vector<reco::GenParticle>& genParticles)
+    {
+      static constexpr int electronPdgId = 11, muonPdgId = 13, tauPdgId = 15;
+      static constexpr double dR2_threshold = std::pow(0.2, 2);
+
+      static const std::map<int, double> pt_thresholds = {
+	{ electronPdgId, 8 }, { muonPdgId, 8 }, { tauPdgId, 15 }
+      };
+
+      using pair = std::pair<int, bool>;
+      static const std::map<pair, GenMatch> genMatches = {
+	{ { electronPdgId, false }, GenMatch::Electron }, { { electronPdgId, true }, GenMatch::TauElectron },
+	{ { muonPdgId, false }, GenMatch::Muon }, { { muonPdgId, true }, GenMatch::TauMuon },
+	{ { tauPdgId, false }, GenMatch::Tau }, { { tauPdgId, true }, GenMatch::Tau }
+      };
+
+      MatchResult result(GenMatch::NoMatch, nullptr);
+      double match_dr2 = dR2_threshold;
+
+
+
+      for(const reco::GenParticle& particle : genParticles) {
+	const bool isTauProduct = particle.statusFlags().isDirectPromptTauDecayProduct();
+	if((!particle.statusFlags().isPrompt() && !isTauProduct) || !particle.statusFlags().isLastCopy()) continue;
+
+	const int abs_pdg = std::abs(particle.pdgId());
+	if(!pt_thresholds.count(abs_pdg)) continue;
+	      
+	const auto gen_particle_p4 = LorentzVector(particle.pt(), particle.eta(), particle.phi(), particle.energy());
+	const auto particle_p4 = abs_pdg == tauPdgId ? GetFinalStateMomentum(particle, true, true) : gen_particle_p4;
+
+	const double dr2 = ROOT::Math::VectorUtil::DeltaR2(p4, particle_p4);
+	if(dr2 >= match_dr2) continue;
+	if(particle_p4.pt() <= pt_thresholds.at(abs_pdg)) continue;
+
+	match_dr2 = dr2;
+	result.first = genMatches.at(pair(abs_pdg, isTauProduct));
+	result.second = &particle;
+      }
+      return result;
+    }
+
