@@ -10,7 +10,6 @@
 <use name="RecoEgamma/EgammaTools"/>
 <use name="CommonTools/Utils" />
 <use name="cp3_llbb/TreeWrapper"/>
-<use name="KaMuCa/Calibration"/>
 <lib name="MathMore"/>
 <use name="rootrflx"/>
 <use name="lhapdf"/>

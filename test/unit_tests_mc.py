@@ -11,9 +11,9 @@ framework = Framework.Framework(options)
 from cp3_llbb.Framework.JetsProducer import discriminators_deepFlavour
 framework.redoJEC(addBtagDiscriminators=discriminators_deepFlavour)
 framework.smearJets()
-framework.applyMuonCorrection("kamuca")
-framework.applyElectronRegression()
-framework.applyElectronSmearing()
+#framework.applyMuonCorrection("kamuca", tag="MC_80X_13TeV")
+##framework.applyElectronRegression()
+##framework.applyElectronSmearing(tag='Moriond17_23Jan')
 framework.doSystematics(['jec', 'jer'])
 
 process = framework.create()

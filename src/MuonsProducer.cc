@@ -3,19 +3,6 @@
 #include <cp3_llbb/Framework/interface/MuonsProducer.h>
 #include "TLorentzVector.h"
 
-bool isMediumMuon2016(const reco::Muon & recoMu) {
-    bool goodGlob = recoMu.isGlobalMuon() &&
-        recoMu.globalTrack()->normalizedChi2() < 3 &&
-        recoMu.combinedQuality().chi2LocalPosition < 12 &&
-        recoMu.combinedQuality().trkKink < 20;
-
-    bool isMedium = muon::isLooseMuon(recoMu) &&
-        recoMu.innerTrack()->validFraction() > 0.49 &&
-        muon::segmentCompatibility(recoMu) > (goodGlob ? 0.303 : 0.451);
-
-    return isMedium;
-}
-
 void MuonsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup) {
     edm::Handle<std::vector<pat::Muon>> muons;
     event.getByToken(m_leptons_token, muons);
@@ -42,7 +29,6 @@ void MuonsProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup
 
         isLoose.push_back(muon.isLooseMuon());
         isMedium.push_back(muon.isMediumMuon());
-        isMedium2016.push_back(isMediumMuon2016(muon));
         isSoft.push_back(muon.isSoftMuon(primary_vertex));
         isTight.push_back(muon.isTightMuon(primary_vertex));
         isHighPt.push_back(muon.isHighPtMuon(primary_vertex));

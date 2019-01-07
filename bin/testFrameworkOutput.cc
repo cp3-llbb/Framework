@@ -67,6 +67,8 @@ namespace {
       if ( a != b ) {
         const auto reldiff = .5*std::abs(a-b)/(a+b);
         if ( reldiff > std::numeric_limits<float>::epsilon() ) {
+          std::cout << "Error: " << msg << " " << a << " vs " << b
+            << " rel.diff=" << reldiff << ", epsilon=" << std::numeric_limits<float>::epsilon() << std::endl;
           return false;
         } else { // within precision: print a warning
           std::cout << "Warning: " << msg << " " << a << " vs " << b
@@ -109,6 +111,7 @@ namespace {
     const auto& refLvs = *(ref->GetListOfLeaves());
     const auto& testLvs = *(test->GetListOfLeaves());
     auto rlIt = refLvs.begin(); auto tlIt = testLvs.begin();
+    const areEqualFloat_<float> compFloat;
     for ( ; rlIt != refLvs.end() && tlIt != testLvs.end(); ++rlIt, ++tlIt ) {
       const auto rlI = dynamic_cast<const TLeaf*>(*rlIt);
       const auto tlI = dynamic_cast<const TLeaf*>(*tlIt);
@@ -117,25 +120,42 @@ namespace {
         areEqual = false;
         continue;
       }
-      if ( std::string(rlI->GetTypeName()) != std::string(tlI->GetTypeName()) ) {
-        std::cout << "Error: Leaves have different typenames: " << rlI->GetTypeName() << " vs " << tlI->GetTypeName() << std::endl;
+      const std::string rTypeName = std::string(rlI->GetTypeName());
+      if ( std::string(rTypeName) != std::string(tlI->GetTypeName()) ) {
+        std::cout << "Error: Leaves have different typenames: " << rTypeName << " vs " << tlI->GetTypeName() << std::endl;
         areEqual = false;
         continue;
       }
       if ( rlI->GetLeafCount() || tlI->GetLeafCount() ) {
-        std::cout << "NotImplemented: Variable-length array leaves" << std::endl;
-        areEqual = false;
+        if ( rlI->GetLeafCount() && tlI->GetLeafCount() ) {
+          if ( rlI->GetLen() != tlI->GetLen() ) {
+            std::cout << "Error: different length for " << rlI->GetName() << " : " << rlI->GetLen() << " vs " << tlI->GetLen() << std::endl;
+            areEqual = false;
+          } else {
+            if ( rTypeName == "float" || rTypeName == "Float_t" ) {
+              for ( Int_t i = 0; i != rlI->GetLen(); ++i ) {
+                areEqual = areEqual && compFloat(rlI->GetValue(i), tlI->GetValue(i),
+                    std::string("leaf ")+rTypeName+"[] "+rlI->GetName()+"["+std::to_string(i)+"]");
+              }
+            } else {
+              std::cout << "NotImplemented: type " << rTypeName  << "[]" << std::endl;
+              areEqual = false;
+            }
+          }
+        } else {
+          std::cout << "Not both variable-length array leaves" << std::endl;
+          areEqual = false;
+        }
       }
-      const std::string msg = std::string("leaf ")+rlI->GetTypeName()+" "+rlI->GetName();
-      if ( std::string(rlI->GetTypeName()) == "float" ) {
-        const areEqualFloat_<float> comp;
-        areEqual = areEqual && comp(rlI->GetValue(), tlI->GetValue(), msg);
-      } else if ( std::string(rlI->GetTypeName()) == "vector<float>" ) {
+      const std::string msg = std::string("leaf ")+rTypeName+" "+rlI->GetName();
+      if ( rTypeName == "float" || rTypeName == "Float_t" ) {
+        areEqual = areEqual && compFloat(rlI->GetValue(), tlI->GetValue(), msg);
+      } else if ( std::string(rTypeName) == "vector<float>" ) {
         areEqual = areEqual && areEqualFloat<std::vector<float>>(rlI->GetValuePointer(), tlI->GetValuePointer(), msg);
-      } else if ( std::string(rlI->GetTypeName()) == "vector<vector<float> >" ) {
+      } else if ( std::string(rTypeName) == "vector<vector<float> >" ) {
         areEqual = areEqual && areEqualFloat<std::vector<std::vector<float>>>(rlI->GetValuePointer(), tlI->GetValuePointer(), msg);
       } else {
-        std::cout << "NotImplemented: type " << rlI->GetTypeName() << std::endl;
+        std::cout << "NotImplemented: type " << rTypeName << std::endl;
         areEqual = false;
       }
     }
@@ -154,7 +174,7 @@ bool diffBranches(size_t entry, TBranch* ref, TBranch* test) {
 	    TBranch* test_subbranch = (TBranch*) test->GetListOfBranches()->UncheckedAt(n);
 	    REQUIRE(test_subbranch);
 
-            bool i_id = diffBranches(entry, ref_subbranch, test_subbranch); CHECK(i_id);
+            bool i_id = diffBranches(entry, ref_subbranch, test_subbranch);
             identical = identical && i_id;
 	}
 
@@ -256,7 +276,6 @@ TEST_CASE("Check if trees are equals", "[diff]") {
             ref_branch->GetEntry(entry);
 
             TBranch* test_branch = test_tree->GetBranch(ref_branch->GetName());
-            CHECK(test_branch);
             if ( ! test_branch ) {
               all_branches_identical = false;
             } else {

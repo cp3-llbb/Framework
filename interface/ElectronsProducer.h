@@ -52,8 +52,6 @@ class ElectronsProducer: public LeptonsProducer<pat::Electron>, public Identifia
         BRANCH(hcalPFClusterIso, std::vector<float>);
         BRANCH(trackIso, std::vector<float>);
 
-        BRANCH(expectedMissingInnerHits, std::vector<unsigned int>);
-
         BRANCH(mva_id_values, std::vector<float>);
         BRANCH(mva_id_categories, std::vector<int>);
 

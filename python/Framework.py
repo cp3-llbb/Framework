@@ -1,4 +1,5 @@
 import copy
+from itertools import chain
 
 import FWCore.ParameterSet.Config as cms
 from FWCore.ParameterSet.SequenceTypes import _SequenceCollection
@@ -27,9 +28,6 @@ class Framework(object):
 
         self.__jer_resolution_file = None
         self.__jer_scalefactor_file = None
-
-        self.__kamuca_tag = 'DATA_80X_13TeV' if options.runOnData else 'MC_80X_13TeV'
-        self.__rochester_input = 'cp3_llbb/Framework/data/Rochester/2016.v3/config.txt'
 
         self.hltProcessName = options.hltProcessName
         self.isData = options.runOnData
@@ -69,7 +67,6 @@ class Framework(object):
 
         process.options = cms.untracked.PSet(
                 wantSummary = cms.untracked.bool(True),
-                allowUnscheduled = cms.untracked.bool(True)
                 )
 
         # Create an empty PSet for communication with GridIn
@@ -280,11 +277,13 @@ class Framework(object):
             self.useJECDatabase(JECDatabase)
 
         from cp3_llbb.Framework.Tools import recorrect_jets, recorrect_met
-        jet_collection = recorrect_jets(self.process, self.isData, 'AK4PFchs', self.__miniaod_jet_collection, addBtagDiscriminators=addBtagDiscriminators)
-        met_collection = recorrect_met(self.process, self.isData, self.__miniaod_met_collection, jet_collection)
+        jet_collection, prodNames_jet = recorrect_jets(self.process, self.isData, 'AK4PFchs', self.__miniaod_jet_collection, addBtagDiscriminators=addBtagDiscriminators)
+        met_collection, prodNames_met = recorrect_met(self.process, self.isData, self.__miniaod_met_collection, jet_collection)
 
         # Fat jets
-        fat_jet_collection = recorrect_jets(self.process, self.isData, 'AK8PFchs', self.__miniaod_fat_jet_collection, addBtagDiscriminators=addBtagDiscriminators)
+        fat_jet_collection, prodNames_fatjet = recorrect_jets(self.process, self.isData, 'AK8PFchs', self.__miniaod_fat_jet_collection, addBtagDiscriminators=addBtagDiscriminators)
+
+        self.path.associate(cms.Task(*(getattr(self.process, name) for name in chain(prodNames_jet, prodNames_met, prodNames_fatjet))))
 
         # Look for producers using the default jet and met collections
         for producer in self.producers:
@@ -357,6 +356,8 @@ class Framework(object):
                 srcCorrections = cms.VInputTag(cms.InputTag('shiftedMETCorrModuleForSmearedJets'))
                 )
 
+        self.path.associate(cms.Task(self.process.slimmedJetsSmeared, self.process.shiftedMETCorrModuleForSmearedJets, self.process.slimmedMETsSmeared))
+
         # Look for producers using the default jet and met collections
         for producer in self.producers:
             p = getattr(self.process.framework.producers, producer)
@@ -373,12 +374,14 @@ class Framework(object):
             print("New jets and MET collections: %r and %r" % (self.__miniaod_jet_collection, self.__miniaod_met_collection))
 
     @dep(before=("create", "muonScale"), performs=("correction", "muonScale"))
-    def applyMuonCorrection(self, type):
+    def applyMuonCorrection(self, type, tag=None, input=None):
         """
         Apply correction to muon
 
         Parameters:
             type: either "rochester" or "kamuca". Define the type of correction to apply
+            tag: KaMuCa tag (required for KaMuCa correction)
+            input: Rochester input (required for Rochester correction)
         """
 
         supported = ['kamuca', 'rochester']
@@ -391,17 +394,25 @@ class Framework(object):
             print("Applying %s correction to muons..." % type.capitalize())
 
         if type == "kamuca":
+            if not tag:
+                raise Exception("KaMuCa correction requested, but no tag given")
+            if ( (     self.isData and not tag.startswith("DATA_") )
+              or ( not self.isData and not tag.startswith("MC_") ) ):
+                raise Exception("KaMuCa tags for data should start with 'DATA_', for MC with 'MC_', got '{0}' and this is {1}".format(tag, ("data" if self.isData else "MC")))
             self.process.slimmedMuonsCorrected = cms.EDProducer('KaMuCaCorrectedPATMuonProducer',
                         src = cms.InputTag(self.__miniaod_muon_collection),
                         enabled = cms.bool(True),
-                        tag = cms.string(self.__kamuca_tag)
+                        tag = cms.string(tag)
                     )
         elif type == "rochester":
+            if not input:
+                raise Exception("Rochester correction requested, but no input given")
             self.process.slimmedMuonsCorrected = cms.EDProducer('RochesterCorrectedPATMuonProducer',
                         src = cms.InputTag(self.__miniaod_muon_collection),
                         enabled = cms.bool(True),
-                        input = cms.FileInPath(self.__rochester_input)
+                        input = cms.FileInPath(input)
                     )
+        self.path.associate(cms.Task(self.process.slimmedMuonsCorrected))
 
         # Look for producers using the default muon input
         for producer in self.producers:
@@ -432,6 +443,7 @@ class Framework(object):
 
         # Rename the collection
         self.process.slimmedElectronsWithRegression = self.process.slimmedElectrons.clone()
+        self.path.associate(cms.Task(self.process.slimmedElectronsWithRegression))
 
         # Look for producers using the default electron input
         for producer in self.producers:
@@ -444,10 +456,13 @@ class Framework(object):
             print("New electrons collection: %r" % (self.__miniaod_electron_collection))
 
     @dep(before=("create", "electronSmearing"), after="electronRegression", performs=("electronSmearing", "correction"))
-    def applyElectronSmearing(self):
+    def applyElectronSmearing(self, tag):
         """
         Apply electron smearing from
             https://twiki.cern.ch/twiki/bin/view/CMS/EGMSmearer
+
+        Parameters:
+            tag: correction file to use (from EgammaAnalysis.ElectronTools.calibrationTablesRun2.files)
         """
 
         if self.verbose:
@@ -467,7 +482,7 @@ class Framework(object):
         self.process.slimmedElectronsSmeared = calibratedPatElectrons.clone(
                 electrons = "selectedElectrons",
                 isMC = not self.isData,
-                correctionFile = files['Moriond17_23Jan']
+                correctionFile = files[tag]
                 )
 
         self.process.load('Configuration.StandardSequences.Services_cff')
@@ -477,6 +492,8 @@ class Framework(object):
                     engineName = cms.untracked.string('TRandom3')
                     )
                 )
+
+        self.path.associate(cms.Task(self.process.selectedElectrons, self.process.slimmedElectronsSmeared, self.process.RandomNumberGeneratorService))
 
         # Look for producers using the default electron input
         for producer in self.producers:
@@ -516,14 +533,16 @@ class Framework(object):
             self.process.egmGsfElectronIDs.physicsObjectSrc = self.__miniaod_electron_collection
 
             id_modules = [
-                    'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Summer16_80X_V1_cff',
-                    'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronHLTPreselecition_Summer16_V1_cff',
-                    'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_GeneralPurpose_V1_cff',
-                    'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_HZZ_V1_cff'
+                    'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Fall17_94X_V2_cff',
+                    'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_noIso_V1_cff',
+                    'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_iso_V1_cff'
                     ]
 
             for mod in id_modules:
                 setupAllVIDIdsInModule(self.process, mod, setupVIDElectronSelection)
+
+            self.path.associate(cms.Task(self.process.electronMVAValueMapProducer))
+            self.path.associate(cms.Task(self.process.egmGsfElectronIDs))
 
             self.process.electronMVAValueMapProducer.srcMiniAOD = self.__miniaod_electron_collection
 

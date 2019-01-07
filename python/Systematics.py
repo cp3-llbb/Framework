@@ -56,6 +56,8 @@ class JetsSystematics(Systematics):
         shiftedMETModuleName = self.formatModuleName(self.metCollection, postfix)
         setattr(self.process, shiftedMETModuleName, shiftedMETModule)
 
+        self.framework.path.associate(cms.Task(*(getattr(self.process, modName) for modName in (shiftedMETCorrModuleName, shiftedMETModuleName))))
+
         return shiftedMETModule
 
 
@@ -104,10 +106,14 @@ class JetsSystematics(Systematics):
                 upModuleInputTag = cms.InputTag(upModule[0].label(), upModule[1])
                 downModuleInputTag = cms.InputTag(downModule[0].label(), downModule[1])
             else:
-                setattr(self.process, self.formatModuleName(self.jetCollection, upModulePostfix), upModule)
-                setattr(self.process, self.formatModuleName(self.jetCollection, downModulePostfix), downModule)
+                upModName = self.formatModuleName(self.jetCollection, upModulePostfix)
+                setattr(self.process, upModName, upModule)
+                downModName = self.formatModuleName(self.jetCollection, downModulePostfix)
+                setattr(self.process, downModName, downModule)
                 upModuleInputTag = cms.InputTag(upModule.label())
                 downModuleInputTag = cms.InputTag(downModule.label())
+
+                self.framework.path.associate(cms.Task(*(getattr(self.process, modName) for modName in (upModName, downModName))))
 
             # Shifted MET
             upMetModule = self.addShiftedMETProducer_(upModuleInputTag.value(), upModulePostfix)

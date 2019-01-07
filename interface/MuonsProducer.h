@@ -35,7 +35,6 @@ class MuonsProducer: public LeptonsProducer<pat::Muon>, public ScaleFactors {
         std::vector<bool>& isLoose = tree["isLoose"].write<std::vector<bool>>();
         std::vector<bool>& isSoft = tree["isSoft"].write<std::vector<bool>>();
         std::vector<bool>& isMedium = tree["isMedium"].write<std::vector<bool>>();
-        std::vector<bool>& isMedium2016 = tree["isMedium2016"].write<std::vector<bool>>();
         std::vector<bool>& isTight = tree["isTight"].write<std::vector<bool>>();
         std::vector<bool>& isHighPt = tree["isHighPt"].write<std::vector<bool>>();
 
