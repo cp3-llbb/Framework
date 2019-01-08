@@ -4,7 +4,7 @@ class CmdLine(object):
     """
     Parse the command line for options. Supported options are:
         - 'globalTag': the global tag to use
-        - 'era': '25ns' or '50ns' (for 2015 data) or '2016'
+        - 'era': '25ns' or '50ns' (for 2015 data) or '2016' or '2017' (default)
         - 'process': The process name used in the MiniAOD generation
         - 'runOnData': 1 if running on data, 0 otherwise
         - 'hltProcessName': the process name used when running the HLT
@@ -75,7 +75,7 @@ class CmdLine(object):
                 'The globaltag to use')
 
         self.options.register('era',
-                '2016',
+                '2017',
                 VarParsing.multiplicity.singleton,
                 VarParsing.varType.string,
                 'Era of the dataset')
@@ -114,6 +114,6 @@ class CmdLine(object):
     @property
     def era(self):
         self._ensureParsed()
-        assert self.options.era in ("25ns", "50ns", "2016")
+        assert self.options.era in ("25ns", "50ns", "2016", "2017")
         from Configuration.StandardSequences.Eras import eras
         return getattr(eras, "Run2_{}".format(self.options.era))
