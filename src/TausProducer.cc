@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include <DataFormats/PatCandidates/interface/PackedCandidate.h>
 #include "DataFormats/Math/interface/Vector3D.h"
 #include <cp3_llbb/Framework/interface/TausProducer.h>
