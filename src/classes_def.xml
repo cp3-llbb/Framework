@@ -6,5 +6,7 @@
     <class name="std::vector<std::vector<std::string>>"/>
     <class name="std::vector<std::vector<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiE4D<float>>>>"/>
     <class name="std::vector<std::map<std::string, bool>>"/>
+    <class name="Framework::GenInfoAndWeights"/>
+    <class name="edm::Wrapper<Framework::GenInfoAndWeights>" persistent="false"/>
     <class name="std::vector<std::unordered_map<std::string,float>>"/>
 </lcgdict>

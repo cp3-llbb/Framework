@@ -3,6 +3,8 @@
 #include <map>
 #include <unordered_map>
 #include <Math/Vector4D.h>
+#include "cp3_llbb/Framework/interface/GenInfoAndWeights.h"
+#include "DataFormats/Common/interface/Wrapper.h"
 
 namespace {
     struct dictionary {
@@ -14,6 +16,8 @@ namespace {
         std::pair<std::string, bool> dummy6;
         std::vector<std::vector<ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiE4D<float>>>> dummy7;
         std::vector<std::vector<std::string>> dummy8;
-	std::vector<std::unordered_map<std::string,float>> dummy9;
+        Framework::GenInfoAndWeights dummy9;
+        edm::Wrapper<Framework::GenInfoAndWeights> dummy10;
+        std::vector<std::unordered_map<std::string,float> > dummy11; 
     };
 }
