@@ -17,13 +17,14 @@
 #include <iostream>
 #include <chrono>
 
+#include "FWCore/ServiceRegistry/interface/Service.h"
+#include "CommonTools/UtilAlgos/interface/TFileService.h"
+
 // user include files
 #include <cp3_llbb/Framework/interface/Framework.h>
 #include <cp3_llbb/Framework/interface/Tools.h>
 #include <cp3_llbb/TreeWrapper/interface/TreeWrapper.h>
 
-#include <Compression.h>
-#include <TFile.h>
 #include <TTree.h>
 
 // Uncomment to enable printout about memory usage
@@ -65,19 +66,16 @@ void apply_permutations(std::vector<T>& vec, std::vector<size_t> const& p) {
     vec = sorted_vec;
 }
 
-ExTreeMaker::ExTreeMaker(const edm::ParameterSet& iConfig):
-    m_output_filename(iConfig.getParameter<std::string>("output")) {
-
+ExTreeMaker::ExTreeMaker(const edm::ParameterSet& iConfig)
+{
 #ifdef DEBUG_MEMORY_USAGE
         std::cout << "[Framework - >>constructor] RSS: " << Tools::process_mem_usage() << std::endl;
 #endif
 
+        edm::Service<TFileService> fs;
+        fs->file().SetCompressionSettings(iConfig.getUntrackedParameter<int32_t>("compressionSettings", 1));
         // Use default values from CMSSW to optimize TTree output
-        m_output.reset(TFile::Open(m_output_filename.c_str(), "recreate", "",
-              iConfig.getUntrackedParameter<int32_t>("compressionSettings", 1))); // see ROOT::CompressionSettings
-        m_output->cd();
-
-        m_raw_tree = new TTree("t", "t");
+        m_raw_tree = fs->make<TTree>("t", "t");
         m_flush_size = iConfig.getUntrackedParameter<unsigned long long>("treeFlushSize", 15 * 1024 * 1024);
         m_raw_tree->SetAutoFlush(0);
 
@@ -92,7 +90,7 @@ ExTreeMaker::ExTreeMaker(const edm::ParameterSet& iConfig):
         m_producers_manager.reset(new ProducersManager(*this));
         m_analyzers_manager.reset(new AnalyzersManager(*this));
 
-        m_metadata.reset(new MetadataManager(m_output.get()));
+        m_metadata.reset(new MetadataManager(&(fs->file())));
 
         // Load plugins
         if (!iConfig.existsAs<edm::ParameterSet>("producers")) {
@@ -347,9 +345,6 @@ void ExTreeMaker::endJob() {
     auto end_time = clock::now();
 
     std::cout << std::endl << "Job done in " << std::chrono::duration_cast<ms>(end_time - m_start_time).count() / 1000. << "s" << std::endl;
-
-    m_raw_tree->AutoSave("FlushBaskets Overwrite");
-    m_output->Write("", TObject::kOverwrite);
 
     m_categories->print_summary();
 
