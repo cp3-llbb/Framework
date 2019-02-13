@@ -30,7 +30,7 @@ class ExTreeMaker: public edm::EDProducer, ProducerGetter, AnalyzerGetter {
 
     public:
         explicit ExTreeMaker(const edm::ParameterSet&);
-        ~ExTreeMaker();
+        virtual ~ExTreeMaker();
 
     private:
         virtual void beginJob() override;

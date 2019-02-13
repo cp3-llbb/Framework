@@ -45,6 +45,7 @@ class BTaggingScaleFactors {
             m_tree(tree) {
                 // Empty
             }
+        virtual ~BTaggingScaleFactors() = default;
 
         virtual void create_branches(const edm::ParameterSet&) final;
 

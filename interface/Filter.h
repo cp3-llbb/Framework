@@ -24,6 +24,7 @@ namespace Framework {
             Filter(const std::string& name, const edm::ParameterSet& config):
                 m_name(name) {
                 }
+            virtual ~Filter() = default;
 
             virtual bool filter(edm::Event&, const edm::EventSetup&) = 0;
             virtual void doConsumes(const edm::ParameterSet&, edm::ConsumesCollector&& collector) {}

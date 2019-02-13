@@ -17,6 +17,7 @@ class ScaleFactors {
             m_tree(tree) {
                 // Empty
             }
+        virtual ~ScaleFactors() = default;
 
         virtual void create_branches(const edm::ParameterSet&) final;
         virtual void create_branch(const std::string& scale_factor, const std::string& branch_name);

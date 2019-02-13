@@ -22,7 +22,8 @@ function cms-merge-commit()
 git cms-init --upstream-only
 
 echo "---> Merging recipes..."
-git cms-merge-topic UAEDF-tomc:eleCutBasedId_94X_V2
+git cms-merge-topic cms-egamma:EgammaID_1023 ## for Photon ID Fall17 V2 (will be included in 10_2_10)
+git cms-merge-topic cms-egamma:EgammaPostRecoTools
 ## add recipes here
 
 echo "---> Running git cms-checkdeps"
@@ -30,3 +31,11 @@ git cms-checkdeps -a
 
 echo "---> Adding TreeWrapper"
 git clone -o upstream https://github.com/blinkseb/TreeWrapper.git cp3_llbb/TreeWrapper
+
+if [ -d "cp3_llbb/Framework" ]; then
+  if ! python -c 'import requests' 2>/dev/null ; then
+    pushd "cp3_llbb/Framework" &> /dev/null
+    source "$(dirname $0)/install_requests.sh"
+    popd &> /dev/null
+  fi
+fi

@@ -35,6 +35,7 @@ namespace Framework {
                 tree(tree_),
                 m_systematics(config.getUntrackedParameter<bool>("systematics", false)) {
                 }
+            virtual ~Analyzer() = default;
 
             virtual void analyze(const edm::Event&, const edm::EventSetup&, const ProducersManager&, const AnalyzersManager&, const CategoryManager&) = 0;
             virtual void doConsumes(const edm::ParameterSet&, edm::ConsumesCollector&& collector) {}

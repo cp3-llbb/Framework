@@ -3,7 +3,7 @@
 # Bootstrap a CMSSW installation ready for a given framework version
 # Usage: source setup_project_with_framework.sh [-j N] [-o NAME] [ -b BRANCH || --pr PULLREQUESTID ]
 
-FRAMEWORK_GITHUB=https://github.com/cp3-llbb/Framework
+FRAMEWORK_GITHUB=https://github.com/cp3-llbb/Framework.git
 
 # Default options
 CORE=4
@@ -29,12 +29,25 @@ do
             shift # past argument
             ;;
         -b|--branch)
+            GITREF="$2"
             BRANCH="$2"
             shift # past argument
             ;;
+        -a|--arch)
+            CMSSW_ARCH="$2"
+            shift
+            ;;
+        -r|--release)
+            CMSSW_VERSION="$2"
+            shift
+            ;;
+        -d|--bootstrap)
+            DEPENDENCIES="$2"
+            shift
+            ;;
         *)
             # unknown option
-            echo "Usage: source setup_project_with_framework.sh [-j N] [-o NAME] [ -b BRANCH OR --pr PULLREQUESTID ]"
+            echo "Usage: source setup_project_with_framework.sh [-j N] [-o NAME] [ -b BRANCH OR --pr PULLREQUESTID ] [-a ARC] [-r CMSSW_X_Y_Z] [-b dependencies.sh]"
             return 1
             ;;
     esac
@@ -58,9 +71,15 @@ if [ -n "${GITREF}" ]; then
   popd &> /dev/null
 fi
 
-CMSSW_ARCH=$(cat "${FWKDIR_TMP}/CMSSW.arch")
-CMSSW_VERSION=$(cat "${FWKDIR_TMP}/CMSSW.release")
-DEPENDENCIES="${FWKDIR_TMP}/bootstrap_jenkins.sh"
+if [ -z "${CMSSW_ARCH}" ]; then
+  CMSSW_ARCH=$(cat "${FWKDIR_TMP}/CMSSW.arch")
+fi
+if [ -z "${CMSSW_VERSION}" ]; then
+  CMSSW_VERSION=$(cat "${FWKDIR_TMP}/CMSSW.release")
+fi
+if [ -z "${DEPENDENCIES}" ]; then
+  DEPENDENCIES="${FWKDIR_TMP}/bootstrap_jenkins.sh"
+fi
 
 if [ -z "${OUTPUT}" ]; then
   OUTPUT="${CMSSW_VERSION}"

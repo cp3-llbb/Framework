@@ -109,6 +109,8 @@ class BinnedValues {
 
     BinnedValues() = default;
 
+    virtual ~BinnedValues() = default;
+
     private:
     template <typename _Value>
         std::vector<_Value> get(Histogram<_Value, float>& h, const std::vector<float>& bins, bool& outOfRange) const {

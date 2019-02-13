@@ -52,6 +52,7 @@ class Histogram {
             m_errors_low.reset(new T[m_size]);
             m_errors_high.reset(new T[m_size]);
         }
+        virtual ~Histogram() = default;
 
         static size_t findBin(const std::vector<_Bin>& array, _Bin value) {
             for (std::size_t i = 0; i < array.size() - 1; i++) {

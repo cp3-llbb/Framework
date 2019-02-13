@@ -19,6 +19,8 @@ struct CategoryMetadata {
 
 class Category {
     public:
+        virtual ~Category() = default;
+
         virtual void configure(const edm::ParameterSet& config) {};
 
         virtual bool event_in_category_pre_analyzers(const ProducersManager& producers) const = 0;

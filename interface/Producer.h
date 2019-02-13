@@ -49,6 +49,8 @@ namespace Framework {
                 m_systematics(config.getUntrackedParameter<bool>("systematics", false)) {
                 }
 
+            virtual ~Producer() = default;
+
             //! Main method of the producer, called for each event.
             /*!
              * You have direct access to the event via the CMSSW interface with the @p event and @p setup parameters.

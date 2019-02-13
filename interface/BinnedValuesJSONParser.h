@@ -16,6 +16,8 @@ class BinnedValuesJSONParser {
             parse_file(file);
         }
 
+        virtual ~BinnedValuesJSONParser() = default;
+
         virtual BinnedValues&& get_values() final {
             return std::move(m_values);
         }

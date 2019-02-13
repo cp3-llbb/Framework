@@ -1,5 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 
+mvaTag = "Run2Fall17IsoV2"
+
 default_configuration = cms.PSet(
         type = cms.string('electrons'),
         prefix = cms.string('electron_'),
@@ -12,11 +14,15 @@ default_configuration = cms.PSet(
                 cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V2-veto"),
                 cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V2-loose"),
                 cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V2-medium"),
-                cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V2-tight")
+                cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V2-tight"),
+                cms.InputTag("egmGsfElectronIDs:mvaEleID-Fall17-iso-V2-wp80"),
+                cms.InputTag("egmGsfElectronIDs:mvaEleID-Fall17-iso-V2-wp90"),
+                cms.InputTag("egmGsfElectronIDs:mvaEleID-Fall17-noIso-V2-wp80"),
+                cms.InputTag("egmGsfElectronIDs:mvaEleID-Fall17-noIso-V2-wp90")
                 ),
             mva_id = cms.untracked.PSet(
-                values=cms.untracked.InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Fall17IsoV1Values"),
-                categories=cms.untracked.InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Fall17IsoV1Categories")),
+                values=cms.untracked.InputTag("electronMVAValueMapProducer:ElectronMVAEstimator{0}Values".format(mvaTag)),
+                categories=cms.untracked.InputTag("electronMVAValueMapProducer:ElectronMVAEstimator{0}Categories".format(mvaTag))),
             scale_factors = cms.untracked.PSet(
                 ## name=cms.untracked.FileInPath(),
                 )

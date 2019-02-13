@@ -18,6 +18,7 @@ class Identifiable {
             ids(tree["ids"].write<std::vector<std::map<std::string, bool>>>()) {
                 // Empty
             }
+        virtual ~Identifiable() = default;
 
         template <class T> void produce_id(const edm::Ref<T>& ref) {
             std::map<std::string, bool> ids_;

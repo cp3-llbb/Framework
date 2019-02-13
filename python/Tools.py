@@ -161,19 +161,11 @@ def recorrect_jets(process, isData, jetAlgo, jetCollection, addBtagDiscriminator
             )
 
     if addBtagDiscriminators is None:
-        outName = 'updatedPatJets{}'.format(label)
-        return outName, ("patJetCorrFactors{}".format(label), "metrawCaloNewJEC", outName,)
+        return 'updatedPatJets{}'.format(label)
     else:
-        outName = 'selectedUpdatedPatJets{}'.format(label)
-        tagModNames = set(dNm.split(":")[0] for dNm in addBtagDiscriminators if ":" in dNm)
-        tagModNamesMap = { "pfDeepCSVJetTags" : ("pfDeepCSVJetTags", "pfDeepCSVTagInfos", "pfInclusiveSecondaryVertexFinderTagInfos", "pfImpactParameterTagInfos") }
-        return outName, tuple(chain(
-              ("{0}{1}".format(modNm, label) for modNm in chain(
-                    ("patJetCorrFactors", "updatedPatJets", "selectedUpdatedPatJets", "patJetCorrFactorsTransientCorrected", "updatedPatJetsTransientCorrected")
-                  , chain.from_iterable(tagModNamesMap[tmn] for tmn in tagModNames)
-                  )), [outName]))
+        return 'selectedUpdatedPatJets{}'.format(label)
 
-def recorrect_met(process, isData, metCollection, jetCollection):
+def recorrect_met(process, isData, metCollection, jetCollection, fixEE2017=False):
     """
     Create a new MET collection, propagating new JEC from jetCollection
 
@@ -194,23 +186,9 @@ def recorrect_met(process, isData, metCollection, jetCollection):
                 ))
 
     from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
-    runMetCorAndUncFromMiniAOD(process, isData=isData, jetCollUnskimmed=jetCollection, postfix="NewJEC")
-    return 'slimmedMETsNewJEC', tuple(([genMetTag, "genMetExtractorNewJEC"] if not isData else [])+list(
-        "{}NewJEC".format(modName) for modName in chain(
-              [ "basicJetsForMet", "jetSelectorForMet", "cleanedPatJets", "patJetCorrFactorsReapplyJEC", "patJetsReapplyJEC", "pfMet", "patPFMet", "patPFMetT1", "patPFMetT1T2Corr", "slimmedMETs" ]
-            , ("{0}{1}{2}".format(aMod, var, vDir)
-                for aMod in ("shiftedPat", "shiftedPatMETCorr", "patPFMetT1")
-                for var in ["JetEn", "MuonEn", "ElectronEn", "PhotonEn", "TauEn", "UnclusteredEn"]+(["JetRes"] if not isData else []) ## "JetRes" for MC
-                for vDir in ("Up", "Down"))
-            , [ "pfCandsForUnclusteredUnc", "pfCandsNoJetsNoEleNoMuNoTau", "pfCandsNoJetsNoEleNoMu", "pfCandsNoJetsNoEle", "pfCandsNoJets" ]
-            , [ "patPFMetT1Smear", "patPFMetT1T2SmearCorr", "selectedPatJetsForMetT1T2SmearCorr", "patSmearedJets" ]
-            , ([ "{0}SmearedJetRes{1}".format(mod, vDir) for mod in ("shiftedPat", "shiftedPatMETCorr") for vDir in ("Up", "Down") ] if not isData else
-               [ "patPFMetT1JetRes{0}".format(vDir) for vDir in ("Up", "Down") ])
-            , [ "patPFMetT1SmearJet{0}{1}".format(qty, vDir) for qty in ("Res", "En") for vDir in ("Up", "Down") ]
-            , [ "patPFMetT1Txy", "patPFMetTxyCorr" ]
-        ))+
-        (["ak4PFCHS{0}Corrector".format(corrType) for corrType in ("L1FastL2L3", "L1Fastjet", "L2Relative", "L3Absolute", "L1FastL2L3Residual", "Residual")] if isData else [])+
-        [ "patCaloMet", "patCHSMet", "pfMetCHS", "pfCHS", "patTrkMet", "pfMetTrk", "pfTrk", "metrawCaloNewJEC" ])
+    runMetCorAndUncFromMiniAOD(process, isData=isData, jetCollUnskimmed=jetCollection, postfix="NewJEC",
+            fixEE2017=fixEE2017, fixEE2017Params={'userawPt': True, 'ptThreshold':50.0, 'minEtaThreshold':2.65, 'maxEtaThreshold': 3.139})
+    return 'slimmedMETsNewJEC'
 
 def check_tag_(db_file, tag):
     import sqlite3

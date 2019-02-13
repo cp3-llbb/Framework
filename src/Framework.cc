@@ -202,6 +202,9 @@ ExTreeMaker::ExTreeMaker(const edm::ParameterSet& iConfig):
         std::cout << std::endl;
 }
 
+// to silence warning, and because inherits a throwing constructor, so they need to be all consistent
+ProducerGetter::~ProducerGetter() noexcept(false) {}
+AnalyzerGetter::~AnalyzerGetter() noexcept(false) {}
 
 ExTreeMaker::~ExTreeMaker() {
 
