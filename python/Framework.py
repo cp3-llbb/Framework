@@ -386,50 +386,6 @@ class Framework(object):
         if self.verbose:
             print("New jets and MET collections: %r and %r" % (self.__miniaod_jet_collection, self.__miniaod_met_collection))
 
-    @dep(before=("create", "metSignificanceAndCovMatrix"), after=("jec"), performs=("correction", "metSignificanceAndCovMatrix"))
-    def redoMETsSignificance(self):
-        """
-        Redo MET significance
-
-        Add two new collections: "METCovariance" and "METSignificance"
-        """
-
-
-        if self.verbose:
-            print("")
-            print("Applying METSignificanceProducer to METs: %r" %(self.__miniaod_met_collection) )
-
-
-        # from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
-        from RecoMET.METProducers.METSignificanceParams_cfi import METSignificanceParams
-
-        self.process.METSignificance = cms.EDProducer("METSignificanceProducer",
-                                                                  srcLeptons = cms.VInputTag(self.__miniaod_electron_collection,
-                                                                                             self.__miniaod_muon_collection,
-                                                                                             'slimmedPhotons'
-                                                                                              ),
-                                                                  srcPfJets            = cms.InputTag(self.__miniaod_jet_collection),
-                                                                  srcMet               = cms.InputTag(self.__miniaod_met_collection),
-                                                                  srcPFCandidates      = cms.InputTag('packedPFCandidates'),
-                                                                  srcJetSF             = cms.string('AK4PFchs'),
-                                                                  srcJetResPt          = cms.string('AK4PFchs_pt'),
-                                                                  srcJetResPhi         = cms.string('AK4PFchs_phi'),
-                                                                  srcRho               = cms.InputTag('fixedGridRhoAll'),
-
-                                                                  parameters = METSignificanceParams
-                                                                  )
-        # # Look for producers using the default muon input
-        # for producer in self.producers:
-        #     p = getattr(self.process.framework.producers, producer)
-        #     change_input_tags_and_strings(p, self.__miniaod_met_collection, 'slimmedMETsNewSignificance', 'producers.' + producer, '    ')
-        #
-        # self.__miniaod_met_collection = 'slimmedMETsNewSignificance'
-
-        if self.verbose:
-            print("New METs Significance collection: %r" % ("METSignificance"))
-
-
-
     @dep(before=("create", "muonScale"), performs=("correction", "muonScale"))
     def applyMuonCorrection(self, type):
         """
