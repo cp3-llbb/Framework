@@ -24,6 +24,7 @@ class Framework(object):
         self.__miniaod_met_collection = 'slimmedMETs'
         self.__miniaod_muon_collection = 'slimmedMuons'
         self.__miniaod_electron_collection = 'slimmedElectrons'
+        self.__miniaod_tau_collection = 'slimmedTaus'
 
         self.__jer_resolution_file = None
         self.__jer_scalefactor_file = None
@@ -550,6 +551,7 @@ class Framework(object):
         from cp3_llbb.Framework import METProducer
         from cp3_llbb.Framework import MuonsProducer
         from cp3_llbb.Framework import ElectronsProducer
+        from cp3_llbb.Framework import TausProducer
         from cp3_llbb.Framework import VerticesProducer
 
         self.process.TFileService = cms.Service("TFileService",
@@ -569,6 +571,7 @@ class Framework(object):
         self.addProducer('met', copy.deepcopy(METProducer.default_configuration))
         self.addProducer('muons', copy.deepcopy(MuonsProducer.default_configuration))
         self.addProducer('electrons', copy.deepcopy(ElectronsProducer.default_configuration))
+        self.addProducer('taus', copy.deepcopy(TausProducer.default_configuration))
         self.addProducer('vertices', copy.deepcopy(VerticesProducer.default_configuration))
 
         if not self.isData:

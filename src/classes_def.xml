@@ -8,4 +8,5 @@
     <class name="std::vector<std::map<std::string, bool>>"/>
     <class name="Framework::GenInfoAndWeights"/>
     <class name="edm::Wrapper<Framework::GenInfoAndWeights>" persistent="false"/>
+    <class name="std::vector<std::unordered_map<std::string,float>>"/>
 </lcgdict>

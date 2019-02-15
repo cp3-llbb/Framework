@@ -12,7 +12,12 @@ void METProducer::produce(edm::Event& event, const edm::EventSetup& eventSetup) 
     sumEt = met.sumEt();
     significance = met.metSignificance();
 
-    if (m_slimmed) {
+    CovMatrix00 = met.getSignificanceMatrix()[0][0];  
+    CovMatrix01 = met.getSignificanceMatrix()[0][1];
+    CovMatrix10 = met.getSignificanceMatrix()[1][0];
+    CovMatrix11 = met.getSignificanceMatrix()[1][1];
+
+  if (m_slimmed) {
         uncorrectedPt = met.uncorPt();
         uncorrectedPhi = met.uncorPhi();
         uncorrectedSumEt = met.uncorSumEt();
